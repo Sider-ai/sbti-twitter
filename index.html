@@ -406,6 +406,118 @@
     /* ===== SHARE CARD CANVAS (hidden) ===== */
     #shareCanvas { display: none; }
 
+    /* ===== POSTER MODAL ===== */
+    .poster-modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75); z-index: 999;
+      align-items: center; justify-content: center;
+    }
+    .poster-modal-overlay.open { display: flex; }
+    .poster-modal {
+      background: var(--panel); border-radius: 18px;
+      padding: 20px; max-width: 440px; width: 90%;
+      max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    .poster-modal-close {
+      position: absolute; top: 12px; right: 14px;
+      background: none; color: var(--muted); font-size: 22px;
+      border: none; cursor: pointer; z-index: 2;
+    }
+    .poster-modal-close:hover { color: var(--text); transform: none; }
+    .poster-modal img {
+      width: 100%; border-radius: 12px; margin-bottom: 14px;
+    }
+    .poster-modal-actions {
+      display: flex; gap: 10px; justify-content: center;
+    }
+
+    /* ===== DANMAKU ===== */
+    .danmaku-layer {
+      position: absolute; inset: 0; overflow: hidden;
+      pointer-events: none; z-index: 5;
+    }
+    .danmaku-item {
+      position: absolute; white-space: nowrap;
+      color: rgba(255,255,255,0.45);
+      font-weight: 600; border-radius: 999px;
+      padding: 4px 14px;
+      background: rgba(124,108,240,0.08);
+      animation: danmaku-fly linear forwards;
+      will-change: transform;
+    }
+    @keyframes danmaku-fly {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(-100vw - 100%)); }
+    }
+
+    /* ===== COMPARE SCREEN ===== */
+    .compare-wrap { padding: 24px; }
+    .compare-header { text-align: center; margin-bottom: 24px; }
+    .compare-header h2 { font-size: 22px; margin-bottom: 8px; }
+    .compare-sides {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px; margin-bottom: 24px;
+    }
+    .compare-side {
+      border: 1px solid var(--panel-border); border-radius: 16px;
+      padding: 18px; background: var(--bg2); text-align: center;
+    }
+    .compare-side .side-label {
+      font-size: 12px; color: var(--muted); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .compare-side .side-type {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .compare-side .side-name {
+      font-size: 14px; color: var(--muted); margin-top: 4px;
+    }
+    .compat-badge {
+      text-align: center; margin-bottom: 24px;
+      padding: 20px; border-radius: 18px;
+      background: var(--accent-glow); border: 1px solid var(--panel-border);
+    }
+    .compat-score {
+      font-size: 48px; font-weight: 900; color: var(--accent-strong);
+    }
+    .compat-label {
+      font-size: 18px; font-weight: 700; margin-top: 6px; color: var(--text);
+    }
+    .compat-desc { color: var(--muted); font-size: 14px; margin-top: 6px; }
+    .compare-dims { display: grid; gap: 8px; margin-bottom: 24px; }
+    .compare-dim-row {
+      display: grid; grid-template-columns: 1fr 40px 40px;
+      gap: 8px; align-items: center;
+      font-size: 13px; padding: 8px 12px;
+      border-radius: 10px; background: var(--bg2);
+      border: 1px solid var(--panel-border);
+    }
+    .compare-dim-row .dim-label { color: var(--muted); }
+    .compare-dim-row .lv {
+      text-align: center; font-weight: 800; border-radius: 6px; padding: 2px 0;
+    }
+    .lv-H { color: #2ecc71; background: rgba(46,204,113,0.1); }
+    .lv-M { color: #f39c12; background: rgba(243,156,18,0.1); }
+    .lv-L { color: #e74c3c; background: rgba(231,76,60,0.1); }
+    .compare-share { text-align: center; margin-top: 18px; }
+    @media (max-width: 700px) {
+      .compare-sides { grid-template-columns: 1fr; }
+    }
+
+    /* ===== FRIEND BANNER ===== */
+    .friend-banner {
+      background: linear-gradient(135deg, var(--accent-glow), rgba(155,89,182,0.15));
+      border: 1px solid var(--panel-border);
+      border-radius: 14px; padding: 16px 20px;
+      text-align: center; margin-bottom: 16px;
+      font-size: 14px; color: var(--accent-strong);
+    }
+
     /* ===== ERROR ===== */
     .error-box {
       background: rgba(231,76,60,0.1);
@@ -435,9 +547,13 @@
       </div>
     </div>
 
+    <!-- ===== FRIEND BANNER (shown when /cp link) ===== -->
+    <div id="friendBanner" class="friend-banner" style="display:none;"></div>
+
     <!-- ===== SCREEN 1: LANDING ===== -->
     <section id="landing" class="screen active">
-      <div class="hero card">
+      <div class="hero card" style="position:relative;">
+        <div class="danmaku-layer" id="danmakuLayer"></div>
         <div class="badge-tag">&#x1F9E0; <span data-i18n="badge">SBTI AI 人格分析</span></div>
         <h1 data-i18n="heroTitle">让 AI 读你的推文<br/>揭穿你的灵魂</h1>
         <p class="sub" data-i18n="heroSub">基于 SBTI 人格框架 15 维度 · 5 大模型 · 27 种人格<br/>20 条推文，足以看透你</p>
@@ -597,7 +713,52 @@
       </div>
     </section>
 
+    <!-- ===== SCREEN 5: COMPARE ===== -->
+    <section id="compare" class="screen">
+      <div class="compare-wrap card">
+        <div class="compare-header">
+          <h2 data-i18n="compareTitle">人格对比</h2>
+        </div>
+        <div class="compare-sides">
+          <div class="compare-side">
+            <div class="side-label" data-i18n="compareFriend">好友</div>
+            <div class="side-type" id="compareFriendType"></div>
+            <div class="side-name" id="compareFriendName"></div>
+          </div>
+          <div class="compare-side">
+            <div class="side-label" data-i18n="compareYou">你</div>
+            <div class="side-type" id="compareYouType"></div>
+            <div class="side-name" id="compareYouName"></div>
+          </div>
+        </div>
+        <div class="compat-badge">
+          <div class="compat-score" id="compatScore"></div>
+          <div class="compat-label" id="compatLabel"></div>
+          <div class="compat-desc" id="compatDesc"></div>
+        </div>
+        <div class="compare-dims" id="compareDimList"></div>
+        <div class="compare-share">
+          <button id="compareShareBtn" class="btn-primary" data-i18n="compareShareBtn">分享对比结果</button>
+        </div>
+        <div class="result-footer" style="margin-top:18px;">
+          <button id="compareBackBtn" class="btn-secondary" data-i18n="compareBack">查看我的完整结果</button>
+          <button id="compareRetryBtn" class="btn-secondary" data-i18n="retryBtn">换一个账号分析</button>
+        </div>
+      </div>
+    </section>
+
     <canvas id="shareCanvas" width="800" height="1200"></canvas>
+
+    <!-- ===== POSTER MODAL ===== -->
+    <div class="poster-modal-overlay" id="posterModal">
+      <div class="poster-modal">
+        <button class="poster-modal-close" id="posterModalClose">&times;</button>
+        <img id="posterModalImg" alt="Share Card" />
+        <div class="poster-modal-actions">
+          <button id="posterSaveBtn" class="btn-primary" data-i18n="posterSave">保存图片</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -662,6 +823,13 @@
         cardFooter: '来测测你的推文暴露了什么 → sbti.sider.ai',
         webShareMore: '📲 更多分享方式',
         typesTitle: '27 种人格类型', typesSub: '你是哪一种？让 AI 读你的推文来揭晓',
+        compareTitle: '人格对比', compareFriend: '好友', compareYou: '你',
+        compareShareBtn: '分享对比结果', compareBack: '查看我的完整结果',
+        compatSoulmates: '灵魂伴侣', compatKindred: '惺惺相惜',
+        compatLoveHate: '相爱相杀', compatDiffPlanet: '来自不同星球',
+        friendBannerTpl: '你的好友 @{handle} 测出了 {type} — 来测测你们有多默契！',
+        compareShareTpl: '刚测了SBTI人格测试，跟我默契超过{score}分的请我喝奶茶🧋',
+        posterSave: '保存图片',
       },
       'zh-TW': {
         badge: 'SBTI AI 人格分析',
@@ -699,6 +867,13 @@
         errorTpl: '分析失敗：{msg}', noTweets: '未能獲取到推文，該帳號可能是私密帳號或沒有推文',
         cardFooter: '來測測你的推文暴露了什麼 → sbti.sider.ai', webShareMore: '📲 更多分享方式',
         typesTitle: '27 種人格類型', typesSub: '你是哪一種？讓 AI 讀你的推文來揭曉',
+        compareTitle: '人格對比', compareFriend: '好友', compareYou: '你',
+        compareShareBtn: '分享對比結果', compareBack: '查看我的完整結果',
+        compatSoulmates: '靈魂伴侶', compatKindred: '惺惺相惜',
+        compatLoveHate: '相愛相殺', compatDiffPlanet: '來自不同星球',
+        friendBannerTpl: '你的好友 @{handle} 測出了 {type} — 來測測你們有多默契！',
+        compareShareTpl: '剛測了SBTI人格測試，跟我默契超過{score}分的請我喝奶茶🧋',
+        posterSave: '保存圖片',
       },
       en: {
         badge: 'SBTI AI Personality Test',
@@ -736,6 +911,13 @@
         errorTpl: 'Analysis failed: {msg}', noTweets: 'Could not fetch tweets. The account may be private or have no tweets.',
         cardFooter: 'What do your tweets reveal? → sbti.sider.ai', webShareMore: '📲 More sharing options',
         typesTitle: '27 Personality Types', typesSub: 'Which one are you? Let AI read your tweets to find out.',
+        compareTitle: 'Personality Comparison', compareFriend: 'Friend', compareYou: 'You',
+        compareShareBtn: 'Share Comparison', compareBack: 'View My Full Result',
+        compatSoulmates: 'Soulmates', compatKindred: 'Kindred Spirits',
+        compatLoveHate: 'Love-Hate', compatDiffPlanet: 'From Different Planets',
+        friendBannerTpl: 'Your friend @{handle} got {type} — test yourself to compare!',
+        compareShareTpl: 'Just took the SBTI personality test. Buy me boba if our compatibility is over {score}! 🧋',
+        posterSave: 'Save Image',
       },
       ja: {
         badge: 'SBTI AI 性格診断',
@@ -773,6 +955,13 @@
         errorTpl: '分析失敗：{msg}', noTweets: 'ツイートを取得できませんでした。非公開アカウントかツイートがない可能性があります。',
         cardFooter: 'あなたのツイートは何を暴く？→ sbti.sider.ai', webShareMore: '📲 その他の共有方法',
         typesTitle: '27の性格タイプ', typesSub: 'あなたはどのタイプ？AIにツイートを読ませて判定',
+        compareTitle: '性格比較', compareFriend: '友達', compareYou: 'あなた',
+        compareShareBtn: '比較結果をシェア', compareBack: '完全な結果を見る',
+        compatSoulmates: 'ソウルメイト', compatKindred: '親友',
+        compatLoveHate: '愛憎', compatDiffPlanet: '別の惑星から',
+        friendBannerTpl: '友達の @{handle} は {type} でした — あなたも比較してみよう！',
+        compareShareTpl: 'SBTI性格テストを受けた。相性{score}点以上の人タピオカおごって🧋',
+        posterSave: '画像を保存',
       },
       ko: {
         badge: 'SBTI AI 성격 분석',
@@ -810,6 +999,13 @@
         errorTpl: '분석 실패: {msg}', noTweets: '트윗을 가져올 수 없습니다. 비공개 계정이거나 트윗이 없을 수 있습니다.',
         cardFooter: '당신의 트윗은 무엇을 드러낼까? → sbti.sider.ai', webShareMore: '📲 더 많은 공유 방법',
         typesTitle: '27가지 성격 유형', typesSub: '당신은 어떤 유형? AI가 트윗을 읽고 알려드립니다',
+        compareTitle: '성격 비교', compareFriend: '친구', compareYou: '나',
+        compareShareBtn: '비교 결과 공유', compareBack: '내 전체 결과 보기',
+        compatSoulmates: '소울메이트', compatKindred: '동류',
+        compatLoveHate: '애증', compatDiffPlanet: '다른 행성에서',
+        friendBannerTpl: '친구 @{handle}이(가) {type}으로 나왔어요 — 비교해보세요!',
+        compareShareTpl: 'SBTI 성격 테스트 했는데 나랑 궁합 {score}점 이상이면 밀크티 사줘🧋',
+        posterSave: '이미지 저장',
       },
       de: {
         badge: 'SBTI AI Persönlichkeitstest',
@@ -847,6 +1043,13 @@
         errorTpl: 'Analyse fehlgeschlagen: {msg}', noTweets: 'Tweets konnten nicht abgerufen werden. Das Konto ist möglicherweise privat.',
         cardFooter: 'Was verraten deine Tweets? → sbti.sider.ai', webShareMore: '📲 Weitere Optionen',
         typesTitle: '27 Persönlichkeitstypen', typesSub: 'Welcher bist du? Lass KI deine Tweets analysieren.',
+        compareTitle: 'Persönlichkeitsvergleich', compareFriend: 'Freund', compareYou: 'Du',
+        compareShareBtn: 'Vergleich teilen', compareBack: 'Mein vollständiges Ergebnis',
+        compatSoulmates: 'Seelenverwandte', compatKindred: 'Geistesverwandte',
+        compatLoveHate: 'Hassliebe', compatDiffPlanet: 'Von verschiedenen Planeten',
+        friendBannerTpl: 'Dein Freund @{handle} hat {type} bekommen — teste dich zum Vergleich!',
+        compareShareTpl: 'Hab den SBTI-Test gemacht. Wer über {score} Punkte Kompatibilität hat, gibt einen Bubble Tea aus 🧋',
+        posterSave: 'Bild speichern',
       },
       es: {
         badge: 'SBTI AI Test de Personalidad',
@@ -884,6 +1087,13 @@
         errorTpl: 'Análisis fallido: {msg}', noTweets: 'No se pudieron obtener tweets. La cuenta puede ser privada o no tener tweets.',
         cardFooter: '¿Qué revelan tus tweets? → sbti.sider.ai', webShareMore: '📲 Más opciones para compartir',
         typesTitle: '27 Tipos de Personalidad', typesSub: '¿Cuál eres tú? Deja que la IA lea tus tweets.',
+        compareTitle: 'Comparación de Personalidad', compareFriend: 'Amigo', compareYou: 'Tú',
+        compareShareBtn: 'Compartir Comparación', compareBack: 'Ver Mi Resultado Completo',
+        compatSoulmates: 'Almas Gemelas', compatKindred: 'Espíritus Afines',
+        compatLoveHate: 'Amor-Odio', compatDiffPlanet: 'De Planetas Diferentes',
+        friendBannerTpl: 'Tu amigo @{handle} obtuvo {type} — ¡compara contigo!',
+        compareShareTpl: 'Hice el test SBTI. Si nuestra compatibilidad supera {score}, me invitas a un boba 🧋',
+        posterSave: 'Guardar Imagen',
       },
       fr: {
         badge: 'SBTI AI Test de Personnalité',
@@ -921,6 +1131,13 @@
         errorTpl: 'Échec de l\'analyse : {msg}', noTweets: 'Impossible de récupérer les tweets. Le compte est peut-être privé.',
         cardFooter: 'Que révèlent vos tweets ? → sbti.sider.ai', webShareMore: '📲 Plus d\'options de partage',
         typesTitle: '27 Types de Personnalité', typesSub: 'Lequel êtes-vous ? Laissez l\'IA lire vos tweets.',
+        compareTitle: 'Comparaison de Personnalité', compareFriend: 'Ami', compareYou: 'Vous',
+        compareShareBtn: 'Partager la Comparaison', compareBack: 'Voir Mon Résultat Complet',
+        compatSoulmates: 'Âmes Soeurs', compatKindred: 'Esprits Proches',
+        compatLoveHate: 'Amour-Haine', compatDiffPlanet: 'De Planètes Différentes',
+        friendBannerTpl: 'Votre ami @{handle} a obtenu {type} — comparez avec vous !',
+        compareShareTpl: 'J\'ai fait le test SBTI. Si notre compatibilité dépasse {score}, offre-moi un boba 🧋',
+        posterSave: 'Enregistrer l\'Image',
       },
       tr: {
         badge: 'SBTI AI Kişilik Testi',
@@ -958,6 +1175,13 @@
         errorTpl: 'Analiz başarısız: {msg}', noTweets: 'Tweetler alınamadı. Hesap gizli olabilir veya tweet olmayabilir.',
         cardFooter: 'Tweetlerin neyi ifşa ediyor? → sbti.sider.ai', webShareMore: '📲 Daha fazla paylaşım seçeneği',
         typesTitle: '27 Kişilik Tipi', typesSub: 'Hangisisin? AI tweetlerini okuyup söylesin.',
+        compareTitle: 'Kişilik Karşılaştırması', compareFriend: 'Arkadaş', compareYou: 'Sen',
+        compareShareBtn: 'Karşılaştırmayı Paylaş', compareBack: 'Tam Sonucumu Gör',
+        compatSoulmates: 'Ruh İkizi', compatKindred: 'Ruh Arkadaşı',
+        compatLoveHate: 'Aşk-Nefret', compatDiffPlanet: 'Farklı Gezegenlerden',
+        friendBannerTpl: 'Arkadaşın @{handle} {type} çıktı — kendinle karşılaştır!',
+        compareShareTpl: 'SBTI kişilik testi yaptım. Benimle uyumu {score} üstü olan boba ısmarlar 🧋',
+        posterSave: 'Resmi Kaydet',
       },
     };
 
@@ -1270,7 +1494,8 @@
       landing: document.getElementById('landing'),
       install: document.getElementById('install'),
       loading: document.getElementById('loading'),
-      result: document.getElementById('result')
+      result: document.getElementById('result'),
+      compare: document.getElementById('compare')
     };
 
     function showScreen(name) {
@@ -1519,11 +1744,6 @@
     // =============================================
     //  SHARE FUNCTIONALITY
     // =============================================
-    function getShareUrl() {
-      const type = currentResult?.finalType?.code || '';
-      return `https://sbti.sider.ai/?type=${encodeURIComponent(type)}&ref=share`;
-    }
-
     function getShareText() {
       const type = currentResult?.finalType;
       if (!type) return '';
@@ -1552,14 +1772,26 @@
       }
     });
 
-    // Download share card
+    // Download share card — show modal instead of auto-download
     document.getElementById('downloadImgBtn').addEventListener('click', () => {
       generateShareCard().then(dataUrl => {
-        const a = document.createElement('a');
-        a.href = dataUrl;
-        a.download = `SBTI-${currentResult?.finalType?.code || 'result'}.png`;
-        a.click();
+        document.getElementById('posterModalImg').src = dataUrl;
+        document.getElementById('posterModal').classList.add('open');
       });
+    });
+
+    document.getElementById('posterModalClose').addEventListener('click', () => {
+      document.getElementById('posterModal').classList.remove('open');
+    });
+    document.getElementById('posterModal').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) document.getElementById('posterModal').classList.remove('open');
+    });
+    document.getElementById('posterSaveBtn').addEventListener('click', () => {
+      const img = document.getElementById('posterModalImg');
+      const a = document.createElement('a');
+      a.href = img.src;
+      a.download = `SBTI-${currentResult?.finalType?.code || 'result'}.png`;
+      a.click();
     });
 
     async function generateShareCard() {
@@ -1568,88 +1800,170 @@
       const W = 800, H = 1200;
       canvas.width = W; canvas.height = H;
 
-      // Background
+      // Background gradient
       const grad = ctx.createLinearGradient(0, 0, W, H);
       grad.addColorStop(0, '#0a0a14');
+      grad.addColorStop(0.5, '#12121f');
       grad.addColorStop(1, '#1a1a2e');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      // Accent circle
+      // Decorative circles
       ctx.beginPath();
-      ctx.arc(W * 0.7, H * 0.15, 200, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(124,108,240,0.08)';
+      ctx.arc(W * 0.8, 100, 250, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(124,108,240,0.06)';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(100, H * 0.7, 180, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(155,89,182,0.05)';
       ctx.fill();
 
       const type = currentResult?.finalType;
       if (!type) return canvas.toDataURL();
 
-      // Title
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = '16px sans-serif';
+      let y = 40;
+
+      // Try to draw personality image at top
+      try {
+        const img = await loadImage(TYPE_IMAGES[type.code]);
+        const imgSize = 160;
+        const imgX = (W - imgSize) / 2;
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(imgX, y, imgSize, imgSize, 20);
+        ctx.clip();
+        ctx.drawImage(img, imgX, y, imgSize, imgSize);
+        ctx.restore();
+        // Border
+        ctx.strokeStyle = 'rgba(124,108,240,0.3)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.roundRect(imgX, y, imgSize, imgSize, 20);
+        ctx.stroke();
+        y += imgSize + 20;
+      } catch { y += 20; }
+
+      // Type code
       ctx.textAlign = 'center';
-      ctx.fillText('SBTI x Twitter · ' + t('badge'), W / 2, 60);
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 52px sans-serif';
+      ctx.fillText(type.code, W / 2, y + 40);
+      y += 50;
 
       // Type name
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 64px sans-serif';
-      ctx.fillText(type.code, W / 2, 160);
-
       ctx.fillStyle = '#ffd700';
-      ctx.font = 'bold 32px sans-serif';
-      ctx.fillText(`（${getTypeName(type.code)}）`, W / 2, 210);
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText(getTypeName(type.code), W / 2, y + 24);
+      y += 36;
 
       // Match badge
       ctx.fillStyle = '#a29bfe';
-      ctx.font = '18px sans-serif';
-      ctx.fillText(currentResult.badge, W / 2, 260);
-
-      // Intro
-      ctx.fillStyle = '#e8e8f0';
-      ctx.font = '20px sans-serif';
-      ctx.fillText(`"${type.intro}"`, W / 2, 320);
-
-      // Handle
-      ctx.fillStyle = '#8888a8';
       ctx.font = '16px sans-serif';
-      ctx.fillText(`@${currentResult.handle}`, W / 2, 370);
+      ctx.fillText(currentResult.badge, W / 2, y + 18);
+      y += 34;
 
-      // Dimensions (compact)
+      // AI analysis (truncated)
+      const analysisText = (currentResult.analysis || '').substring(0, 120) + (currentResult.analysis?.length > 120 ? '...' : '');
+      ctx.fillStyle = '#c8c8d8';
+      ctx.font = '14px sans-serif';
       ctx.textAlign = 'left';
-      ctx.font = '15px sans-serif';
-      let y = 420;
+      const analysisLines = wrapText(ctx, analysisText, W - 120, 14);
+      analysisLines.forEach((line, i) => {
+        if (i < 4) ctx.fillText(line, 60, y + 16 + i * 20);
+      });
+      y += Math.min(analysisLines.length, 4) * 20 + 26;
+
+      // Separator
+      ctx.strokeStyle = 'rgba(124,108,240,0.2)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
+      y += 16;
+
+      // 15 dimensions with color-coded bars
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillStyle = '#8888a8';
+      ctx.textAlign = 'left';
+      ctx.fillText(t('sectionDims'), 60, y + 14);
+      y += 28;
+
+      const barWidth = 100, barHeight = 14, rowH = 28;
       dimensionOrder.forEach((dim, i) => {
         const level = currentResult.dimensions[dim] || 'M';
-        const col = i % 2;
+        const col = i < 8 ? 0 : 1;
+        const row = i < 8 ? i : i - 8;
         const x = col === 0 ? 60 : 420;
-        if (col === 0 && i > 0) y += 32;
+        const ry = y + row * rowH;
+
+        // Dim name
         ctx.fillStyle = '#8888a8';
-        ctx.fillText(getDimName(dim), x, y);
-        ctx.fillStyle = level === 'H' ? '#2ecc71' : level === 'L' ? '#e74c3c' : '#f39c12';
-        ctx.fillText(level, x + 200, y);
+        ctx.font = '12px sans-serif';
+        ctx.textAlign = 'left';
+        const shortName = dim;
+        ctx.fillText(shortName, x, ry + 11);
+
+        // Bar background
+        const bx = x + 40;
+        ctx.fillStyle = 'rgba(255,255,255,0.06)';
+        ctx.beginPath(); ctx.roundRect(bx, ry, barWidth, barHeight, 4); ctx.fill();
+
+        // Bar fill
+        const fillPct = level === 'H' ? 1.0 : level === 'M' ? 0.55 : 0.2;
+        const barColor = level === 'H' ? '#2ecc71' : level === 'M' ? '#f39c12' : '#e74c3c';
+        ctx.fillStyle = barColor;
+        ctx.beginPath(); ctx.roundRect(bx, ry, barWidth * fillPct, barHeight, 4); ctx.fill();
+
+        // Level label
+        ctx.fillStyle = barColor;
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(level, bx + barWidth + 8, ry + 11);
       });
 
-      // Footer
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = '18px sans-serif';
-      ctx.fillText(t('cardFooter'), W / 2, H - 60);
+      y += Math.max(8, 7) * rowH + 16;
 
-      // Try to load and draw personality image
-      try {
-        const img = await loadImage(TYPE_IMAGES[type.code]);
-        const imgSize = 200;
-        const imgX = (W - imgSize) / 2;
-        const imgY = H - 340;
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(imgX, imgY, imgSize, imgSize, 16);
-        ctx.clip();
-        ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
-        ctx.restore();
-      } catch {}
+      // Separator
+      ctx.strokeStyle = 'rgba(124,108,240,0.2)';
+      ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
+      y += 20;
+
+      // QR code area placeholder + URL
+      ctx.textAlign = 'center';
+      // Draw a bordered box as QR placeholder
+      const qrSize = 80;
+      const qrX = (W - qrSize) / 2;
+      ctx.strokeStyle = 'rgba(124,108,240,0.3)';
+      ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.roundRect(qrX, y, qrSize, qrSize, 10); ctx.stroke();
+      ctx.fillStyle = '#555';
+      ctx.font = '10px sans-serif';
+      ctx.fillText('QR', W / 2, y + qrSize / 2 + 4);
+      y += qrSize + 14;
+
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = '16px sans-serif';
+      ctx.fillText('sbti.sider.ai', W / 2, y + 10);
+      y += 20;
+
+      // Footer
+      ctx.fillStyle = '#666';
+      ctx.font = '13px sans-serif';
+      ctx.fillText(t('cardFooter'), W / 2, H - 30);
 
       return canvas.toDataURL('image/png');
+    }
+
+    // Helper: wrap text into lines
+    function wrapText(ctx, text, maxWidth, fontSize) {
+      const words = text.split('');
+      const lines = []; let line = '';
+      for (const ch of words) {
+        const test = line + ch;
+        if (ctx.measureText(test).width > maxWidth && line) {
+          lines.push(line); line = ch;
+        } else { line = test; }
+      }
+      if (line) lines.push(line);
+      return lines;
     }
 
     function loadImage(src) {
@@ -1697,6 +2011,262 @@
       showScreen('landing');
       document.getElementById('handleInput').value = '';
       document.getElementById('handleInput').focus();
+    });
+
+    // =============================================
+    //  DANMAKU / BARRAGE SYSTEM
+    // =============================================
+    const DANMAKU_COMMENTS = {
+      'zh-CN': [
+        '我竟然是SHIT😂','OJBK无所谓人也太准了','谁也是LOVE-R举个手🙋','BOSS人格报到！',
+        'DEAD...我还活着吗','测完想转发给全世界','CTRL拿捏一切💪','FAKE伪人太真实了',
+        '居然是DRUNK酒鬼哈哈','JOKE-R小丑竟是我自己🤡','SEXY尤物就是我✨',
+        'THIN-K思考者overthinking中...','GOGO行者冲冲冲','MUM妈妈型人格暖哭了',
+        'ZZZZ装死中勿扰','SOLO孤儿但独立！','MONK佛系人格无欲无求',
+        'IMFW废物？不我是宝藏！','WOC!握草这也太准','MALO吗喽本喽🐒',
+        'IMSB...我选择沉默','POOR穷但快乐','ATM-er别找我借钱😭',
+        'HHHH哈哈哈停不下来','THAN-K感恩遇见你们','OH-NO完蛋了',
+        'Dior-s屌丝逆袭中','FUCK这什么鬼人格','AI看透了我的灵魂😱',
+      ],
+      'zh-TW': [
+        '我竟然是SHIT😂','OJBK無所謂人也太準了','誰也是LOVE-R舉個手🙋','BOSS人格報到！',
+        'DEAD...我還活著嗎','測完想轉發給全世界','CTRL拿捏一切💪','FAKE偽人太真實了',
+        '居然是DRUNK酒鬼哈哈','JOKE-R小丑竟是我自己🤡','SEXY尤物就是我✨',
+        'THIN-K思考者overthinking中...','GOGO行者衝衝衝','MUM媽媽型人格暖哭了',
+        'ZZZZ裝死中勿擾','SOLO孤兒但獨立！','MONK佛系人格無慾無求',
+        '這測試太神了😱','WOC!握草太準了','MALO嗎嘍本嘍🐒',
+        '哈哈哈太好笑了','AI看透了我的靈魂','HHHH停不下來',
+      ],
+      en: [
+        "I'm literally SHIT 😂","OJBK is too accurate","Any LOVE-R here? 🙋","BOSS personality checking in!",
+        "DEAD... am I alive?","Sharing this with everyone","CTRL controls everything 💪","FAKE is too real lol",
+        "I got DRUNK haha 🍺","JOKE-R the clown is me 🤡","SEXY and I know it ✨",
+        "THIN-K overthinker confirmed...","GOGO let's gooo","MUM personality is wholesome 🥺",
+        "ZZZZ playing dead rn","SOLO orphan but independent!","MONK no desires no worries",
+        "This test is too accurate 😱","WOC! mind blown","MALO monke mode 🐒",
+        "HHHH can't stop laughing","AI exposed my soul","THAN-K grateful for this test",
+        "OH-NO this can't be right","Dior-s rising up","FUCK what kind of personality is this",
+        "IMSB... no comment","POOR but happy","ATM-er stop asking me for money 😭",
+      ],
+      ja: [
+        '私まさかのSHIT😂','OJBKどうでもいい人当たりすぎ','LOVE-Rの人いる？🙋','BOSS人格参上！',
+        'DEAD...まだ生きてる？','シェアせずにはいられない','CTRL支配者💪','FAKEリアルすぎる',
+        'DRUNKだった笑','JOKE-Rピエロは私🤡','SEXYそれは私✨',
+        'THIN-K考えすぎ中...','GOGOレッツゴー','MUM温かすぎる🥺',
+        'ZZZZお休み中','SOLOでも自立してる！','MONK悟りの境地',
+        'このテスト凄い😱','当たりすぎて怖い','HHHH笑いが止まらない',
+        'AIに魂を見透かされた','めっちゃ面白い','OH-NO嘘でしょ',
+      ],
+      ko: [
+        '나 진짜 SHIT이야😂','OJBK 너무 정확해','LOVE-R인 사람? 🙋','BOSS 성격 출석!',
+        'DEAD...나 살아있나?','이거 공유해야돼','CTRL 다 컨트롤💪','FAKE 너무 리얼',
+        'DRUNK이었다 ㅋㅋ','JOKE-R 광대는 나🤡','SEXY 바로 나✨',
+        'THIN-K 생각과다중...','GOGO 가자!','MUM 따뜻해🥺',
+        'ZZZZ 죽은 척 중','SOLO지만 독립적!','MONK 무욕무구',
+        '이 테스트 대박😱','너무 정확해서 무서워','HHHH 웃음 멈출 수가 없어',
+        'AI가 내 영혼을 꿰뚫었다','재밌다 ㅋㅋㅋ','OH-NO 이게 맞아?',
+      ],
+      de: [
+        'Ich bin SHIT 😂','OJBK zu genau','LOVE-R hier? 🙋','BOSS meldet sich!',
+        'DEAD... lebe ich noch?','Muss ich teilen','CTRL kontrolliert alles💪',
+        'DRUNK war ich lol','JOKE-R der Clown bin ich🤡','SEXY das bin ich✨',
+        'THIN-K Überdenker...','GOGO los geht\'s','MUM so warmherzig🥺',
+        'Dieser Test ist zu gut😱','HHHH kann nicht aufhören zu lachen',
+        'KI hat meine Seele durchschaut','OH-NO das kann nicht stimmen',
+      ],
+      es: [
+        'Soy SHIT 😂','OJBK demasiado preciso','LOVE-R aquí? 🙋','BOSS reportándose!',
+        'DEAD... estoy vivo?','Tengo que compartir esto','CTRL controla todo💪',
+        'DRUNK jaja 🍺','JOKE-R el payaso soy yo🤡','SEXY y lo sé✨',
+        'THIN-K pensando mucho...','GOGO vamos!','MUM tan tierno🥺',
+        'Este test es increíble😱','HHHH no puedo parar de reír',
+        'La IA me descifró','OH-NO no puede ser',
+      ],
+      fr: [
+        'Je suis SHIT 😂','OJBK trop précis','LOVE-R ici? 🙋','BOSS présent!',
+        'DEAD... suis-je vivant?','Je dois partager ça','CTRL contrôle tout💪',
+        'DRUNK mdr 🍺','JOKE-R le clown c\'est moi🤡','SEXY et je le sais✨',
+        'THIN-K réflexion en cours...','GOGO on y va!','MUM trop mignon🥺',
+        'Ce test est incroyable😱','HHHH je peux plus m\'arrêter de rire',
+        'L\'IA m\'a percé à jour','OH-NO c\'est pas possible',
+      ],
+      tr: [
+        'Ben SHIT\'im 😂','OJBK çok doğru','LOVE-R var mı? 🙋','BOSS burada!',
+        'DEAD... hayatta mıyım?','Bunu paylaşmalıyım','CTRL her şeyi kontrol💪',
+        'DRUNK çıktı haha 🍺','JOKE-R palyaço benim🤡','SEXY benim✨',
+        'THIN-K düşünce fazlası...','GOGO haydi!','MUM çok tatlı🥺',
+        'Bu test inanılmaz😱','HHHH gülmekten duramıyorum',
+        'AI ruhumu gördü','OH-NO bu doğru olamaz',
+      ],
+    };
+
+    let danmakuTimer = null;
+    function startDanmaku() {
+      if (danmakuTimer) return;
+      const layer = document.getElementById('danmakuLayer');
+      if (!layer) return;
+      const comments = DANMAKU_COMMENTS[currentLang] || DANMAKU_COMMENTS['en'];
+      function spawn() {
+        const el = document.createElement('div');
+        el.className = 'danmaku-item';
+        el.textContent = comments[Math.floor(Math.random() * comments.length)];
+        const size = 12 + Math.random() * 6;
+        el.style.fontSize = size + 'px';
+        el.style.top = (10 + Math.random() * 80) + '%';
+        el.style.right = -300 + 'px';
+        const duration = 8 + Math.random() * 7;
+        el.style.animationDuration = duration + 's';
+        el.style.opacity = 0.25 + Math.random() * 0.3;
+        layer.appendChild(el);
+        el.addEventListener('animationend', () => el.remove());
+      }
+      // Initial burst
+      for (let i = 0; i < 5; i++) setTimeout(() => spawn(), i * 600);
+      danmakuTimer = setInterval(spawn, 1200 + Math.random() * 800);
+    }
+
+    function stopDanmaku() {
+      if (danmakuTimer) { clearInterval(danmakuTimer); danmakuTimer = null; }
+    }
+
+    // Start danmaku when landing is visible
+    const origShowScreen = showScreen;
+    showScreen = function(name) {
+      origShowScreen(name);
+      if (name === 'landing') startDanmaku();
+      else stopDanmaku();
+    };
+    // Auto-start on page load
+    startDanmaku();
+
+    // =============================================
+    //  DNA ENCODING & FRIEND COMPARISON
+    // =============================================
+    let friendData = null; // { dna, typeCode, handle, dimensions }
+
+    function encodeDNA(dimensions) {
+      return dimensionOrder.map(d => {
+        const l = dimensions[d] || 'M';
+        return l === 'L' ? '1' : l === 'M' ? '2' : '3';
+      }).join('');
+    }
+
+    function decodeDNA(dnaStr) {
+      const dims = {};
+      dimensionOrder.forEach((d, i) => {
+        const v = dnaStr[i];
+        dims[d] = v === '1' ? 'L' : v === '3' ? 'H' : 'M';
+      });
+      return dims;
+    }
+
+    function getShareUrl() {
+      const type = currentResult?.finalType?.code || '';
+      let url = `https://sbti.sider.ai/?type=${encodeURIComponent(type)}&ref=share`;
+      if (currentResult?.dimensions && currentResult?.handle) {
+        const dna = encodeDNA(currentResult.dimensions);
+        url = `https://sbti.sider.ai/cp?a=${dna}&t=${encodeURIComponent(type)}&h=${encodeURIComponent(currentResult.handle)}`;
+      }
+      return url;
+    }
+
+    function calcCompatibility(dimsA, dimsB) {
+      let totalDiff = 0;
+      dimensionOrder.forEach(d => {
+        const a = { L: 1, M: 2, H: 3 }[dimsA[d] || 'M'];
+        const b = { L: 1, M: 2, H: 3 }[dimsB[d] || 'M'];
+        totalDiff += Math.abs(a - b);
+      });
+      return Math.round(100 - (totalDiff / 30 * 100));
+    }
+
+    function getCompatLabel(score) {
+      if (score >= 80) return t('compatSoulmates');
+      if (score >= 60) return t('compatKindred');
+      if (score >= 40) return t('compatLoveHate');
+      return t('compatDiffPlanet');
+    }
+
+    function renderCompare() {
+      if (!friendData || !currentResult) return;
+      const friendType = friendData.typeCode;
+      const myType = currentResult.finalType.code;
+
+      document.getElementById('compareFriendType').textContent = friendType;
+      document.getElementById('compareFriendName').textContent = getTypeName(friendType);
+      document.getElementById('compareYouType').textContent = myType;
+      document.getElementById('compareYouName').textContent = getTypeName(myType);
+
+      const score = calcCompatibility(friendData.dimensions, currentResult.dimensions);
+      document.getElementById('compatScore').textContent = score;
+      document.getElementById('compatLabel').textContent = getCompatLabel(score);
+      document.getElementById('compatDesc').textContent = `@${friendData.handle} + @${currentResult.handle}`;
+
+      // Dimension comparison
+      const dimList = document.getElementById('compareDimList');
+      dimList.innerHTML = dimensionOrder.map(dim => {
+        const fLv = friendData.dimensions[dim] || 'M';
+        const mLv = currentResult.dimensions[dim] || 'M';
+        return `<div class="compare-dim-row">
+          <div class="dim-label">${getDimName(dim)}</div>
+          <div class="lv lv-${fLv}">${fLv}</div>
+          <div class="lv lv-${mLv}">${mLv}</div>
+        </div>`;
+      }).join('');
+
+      showScreen('compare');
+    }
+
+    // Parse friend data from URL
+    (function parseFriendUrl() {
+      const params = new URLSearchParams(location.search);
+      const dna = params.get('a');
+      const typeCode = params.get('t');
+      const handle = params.get('h');
+      // Also check pathname for /cp
+      const isCompare = location.pathname.includes('/cp') || (dna && typeCode);
+      if (isCompare && dna && dna.length === 15 && typeCode) {
+        friendData = {
+          dna,
+          typeCode,
+          handle: handle || '???',
+          dimensions: decodeDNA(dna)
+        };
+        // Show friend banner
+        const banner = document.getElementById('friendBanner');
+        banner.textContent = t('friendBannerTpl', { handle: friendData.handle, type: friendData.typeCode });
+        banner.style.display = 'block';
+      }
+    })();
+
+    // Hook: after result renders, if friend data exists, show compare
+    const origRenderResult = renderResult;
+    renderResult = function(r) {
+      origRenderResult(r);
+      if (friendData && currentResult) {
+        setTimeout(() => renderCompare(), 100);
+      }
+    };
+
+    // Compare screen buttons
+    document.getElementById('compareBackBtn').addEventListener('click', () => {
+      showScreen('result');
+    });
+    document.getElementById('compareRetryBtn').addEventListener('click', () => {
+      currentResult = null;
+      showScreen('landing');
+      document.getElementById('handleInput').value = '';
+      document.getElementById('handleInput').focus();
+    });
+    document.getElementById('compareShareBtn').addEventListener('click', () => {
+      if (!currentResult || !friendData) return;
+      const score = calcCompatibility(friendData.dimensions, currentResult.dimensions);
+      const text = t('compareShareTpl', { score: String(score) });
+      const url = getShareUrl();
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+        '_blank', 'width=600,height=400'
+      );
     });
 
     // Web Share API for mobile
