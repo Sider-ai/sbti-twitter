@@ -466,6 +466,12 @@
             <p data-i18n="feat3Desc">生成专属人格卡片，分享到 Twitter 让朋友也来测</p>
           </div>
         </div>
+
+        <div style="margin-top:36px; text-align:left; padding:0 8px;">
+          <h2 style="font-size:20px; text-align:center; margin-bottom:16px;" data-i18n="typesTitle">27 种人格类型</h2>
+          <p style="text-align:center; color:var(--muted); font-size:14px; margin-bottom:20px;" data-i18n="typesSub">你是哪一种？让 AI 读你的推文来揭晓</p>
+          <div id="typesGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:8px;"></div>
+        </div>
       </div>
     </section>
 
@@ -655,6 +661,7 @@
         noTweets: '未能获取到推文，该账号可能是私密账号或没有推文',
         cardFooter: '来测测你的推文暴露了什么 → sbti.sider.ai',
         webShareMore: '📲 更多分享方式',
+        typesTitle: '27 种人格类型', typesSub: '你是哪一种？让 AI 读你的推文来揭晓',
       },
       'zh-TW': {
         badge: 'SBTI AI 人格分析',
@@ -691,6 +698,7 @@
         referralTpl: '你的朋友測出了 {code}（{cn}），來看看 AI 怎麼評價你的推文',
         errorTpl: '分析失敗：{msg}', noTweets: '未能獲取到推文，該帳號可能是私密帳號或沒有推文',
         cardFooter: '來測測你的推文暴露了什麼 → sbti.sider.ai', webShareMore: '📲 更多分享方式',
+        typesTitle: '27 種人格類型', typesSub: '你是哪一種？讓 AI 讀你的推文來揭曉',
       },
       en: {
         badge: 'SBTI AI Personality Test',
@@ -727,6 +735,7 @@
         referralTpl: 'Your friend got {code} ({cn}) — see what AI says about your tweets',
         errorTpl: 'Analysis failed: {msg}', noTweets: 'Could not fetch tweets. The account may be private or have no tweets.',
         cardFooter: 'What do your tweets reveal? → sbti.sider.ai', webShareMore: '📲 More sharing options',
+        typesTitle: '27 Personality Types', typesSub: 'Which one are you? Let AI read your tweets to find out.',
       },
       ja: {
         badge: 'SBTI AI 性格診断',
@@ -763,6 +772,7 @@
         referralTpl: '友達が{code}（{cn}）と診断された — あなたのツイートでAIは何と言う？',
         errorTpl: '分析失敗：{msg}', noTweets: 'ツイートを取得できませんでした。非公開アカウントかツイートがない可能性があります。',
         cardFooter: 'あなたのツイートは何を暴く？→ sbti.sider.ai', webShareMore: '📲 その他の共有方法',
+        typesTitle: '27の性格タイプ', typesSub: 'あなたはどのタイプ？AIにツイートを読ませて判定',
       },
       ko: {
         badge: 'SBTI AI 성격 분석',
@@ -799,6 +809,7 @@
         referralTpl: '친구가 {code}({cn})로 나왔어 — AI가 너의 트윗은 뭐라고 할까?',
         errorTpl: '분석 실패: {msg}', noTweets: '트윗을 가져올 수 없습니다. 비공개 계정이거나 트윗이 없을 수 있습니다.',
         cardFooter: '당신의 트윗은 무엇을 드러낼까? → sbti.sider.ai', webShareMore: '📲 더 많은 공유 방법',
+        typesTitle: '27가지 성격 유형', typesSub: '당신은 어떤 유형? AI가 트윗을 읽고 알려드립니다',
       },
       de: {
         badge: 'SBTI AI Persönlichkeitstest',
@@ -835,6 +846,7 @@
         referralTpl: 'Dein Freund hat {code} ({cn}) bekommen — was sagt die KI über deine Tweets?',
         errorTpl: 'Analyse fehlgeschlagen: {msg}', noTweets: 'Tweets konnten nicht abgerufen werden. Das Konto ist möglicherweise privat.',
         cardFooter: 'Was verraten deine Tweets? → sbti.sider.ai', webShareMore: '📲 Weitere Optionen',
+        typesTitle: '27 Persönlichkeitstypen', typesSub: 'Welcher bist du? Lass KI deine Tweets analysieren.',
       },
       es: {
         badge: 'SBTI AI Test de Personalidad',
@@ -871,6 +883,7 @@
         referralTpl: 'Tu amigo obtuvo {code} ({cn}) — ¿qué dirá la IA de tus tweets?',
         errorTpl: 'Análisis fallido: {msg}', noTweets: 'No se pudieron obtener tweets. La cuenta puede ser privada o no tener tweets.',
         cardFooter: '¿Qué revelan tus tweets? → sbti.sider.ai', webShareMore: '📲 Más opciones para compartir',
+        typesTitle: '27 Tipos de Personalidad', typesSub: '¿Cuál eres tú? Deja que la IA lea tus tweets.',
       },
       fr: {
         badge: 'SBTI AI Test de Personnalité',
@@ -907,6 +920,7 @@
         referralTpl: 'Votre ami a obtenu {code} ({cn}) — que dira l\'IA de vos tweets ?',
         errorTpl: 'Échec de l\'analyse : {msg}', noTweets: 'Impossible de récupérer les tweets. Le compte est peut-être privé.',
         cardFooter: 'Que révèlent vos tweets ? → sbti.sider.ai', webShareMore: '📲 Plus d\'options de partage',
+        typesTitle: '27 Types de Personnalité', typesSub: 'Lequel êtes-vous ? Laissez l\'IA lire vos tweets.',
       },
       tr: {
         badge: 'SBTI AI Kişilik Testi',
@@ -943,6 +957,7 @@
         referralTpl: 'Arkadaşın {code} ({cn}) çıktı — AI senin tweetlerin hakkında ne der?',
         errorTpl: 'Analiz başarısız: {msg}', noTweets: 'Tweetler alınamadı. Hesap gizli olabilir veya tweet olmayabilir.',
         cardFooter: 'Tweetlerin neyi ifşa ediyor? → sbti.sider.ai', webShareMore: '📲 Daha fazla paylaşım seçeneği',
+        typesTitle: '27 Kişilik Tipi', typesSub: 'Hangisisin? AI tweetlerini okuyup söylesin.',
       },
     };
 
@@ -982,7 +997,7 @@
       currentLang = lang;
       localStorage.setItem('sbti-lang', lang);
       applyI18n();
-      // Re-render result if visible
+      renderTypesGrid();
       if (currentResult) renderResult(currentResult);
     }
 
@@ -1009,7 +1024,20 @@
       });
       document.addEventListener('click', () => dropdown.classList.remove('open'));
       applyI18n();
+      renderTypesGrid();
     })();
+
+    function renderTypesGrid() {
+      const grid = document.getElementById('typesGrid');
+      if (!grid) return;
+      const showTypes = ['CTRL','ATM-er','Dior-s','BOSS','THAN-K','OH-NO','GOGO','SEXY','LOVE-R','MUM','FAKE','OJBK','MALO','JOKE-R','WOC!','THIN-K','SHIT','ZZZZ','POOR','MONK','IMSB','SOLO','FUCK','DEAD','IMFW','HHHH','DRUNK'];
+      grid.innerHTML = showTypes.map(code => `
+        <div style="border:1px solid var(--panel-border); border-radius:12px; padding:12px 10px; background:var(--bg2); text-align:center;">
+          <div style="font-weight:800; font-size:14px; color:var(--accent-strong);">${code}</div>
+          <div style="font-size:12px; color:var(--muted); margin-top:4px;">${getTypeName(code)}</div>
+        </div>
+      `).join('');
+    }
 
     // =============================================
     //  SBTI DATA (ported from SBTI-test/index.html)
@@ -1081,6 +1109,71 @@
       "HHHH": { code: "HHHH", cn: "傻乐者", intro: "哈哈哈哈哈哈。", desc: "恭喜您！由于您的思维回路过于清奇，标准人格库已全面崩溃。" },
       "DRUNK": { code: "DRUNK", cn: "酒鬼", intro: "烈酒烧喉，不得不醉。", desc: "您体内流淌的不是血液，是美味的五粮液！" }
     };
+
+    // Translated type names per language
+    const TYPE_NAMES_I18N = {
+      en: { CTRL:"The Controller", "ATM-er":"The Money Giver", "Dior-s":"The Loser", BOSS:"The Leader", "THAN-K":"The Grateful", "OH-NO":"The Oh-No", GOGO:"The Doer", SEXY:"The Stunner", "LOVE-R":"The Hopeless Romantic", MUM:"The Mom", FAKE:"The Fake", OJBK:"The Whatever", MALO:"The Monke", "JOKE-R":"The Clown", "WOC!":"The WTF-er", "THIN-K":"The Thinker", SHIT:"The World-Hater", ZZZZ:"The Playing Dead", POOR:"The Poor One", MONK:"The Monk", IMSB:"The Fool", SOLO:"The Orphan", FUCK:"The F-er", DEAD:"The Dead One", IMFW:"The Waste", HHHH:"The LOL-er", DRUNK:"The Drunk" },
+      'zh-CN': { CTRL:"拿捏者", "ATM-er":"送钱者", "Dior-s":"屌丝", BOSS:"领导者", "THAN-K":"感恩者", "OH-NO":"哦不人", GOGO:"行者", SEXY:"尤物", "LOVE-R":"多情者", MUM:"妈妈", FAKE:"伪人", OJBK:"无所谓人", MALO:"吗喽", "JOKE-R":"小丑", "WOC!":"握草人", "THIN-K":"思考者", SHIT:"愤世者", ZZZZ:"装死者", POOR:"贫困者", MONK:"僧人", IMSB:"傻者", SOLO:"孤儿", FUCK:"草者", DEAD:"死者", IMFW:"废物", HHHH:"傻乐者", DRUNK:"酒鬼" },
+      'zh-TW': { CTRL:"拿捏者", "ATM-er":"送錢者", "Dior-s":"屌絲", BOSS:"領導者", "THAN-K":"感恩者", "OH-NO":"哦不人", GOGO:"行者", SEXY:"尤物", "LOVE-R":"多情者", MUM:"媽媽", FAKE:"偽人", OJBK:"無所謂人", MALO:"嗎嘍", "JOKE-R":"小丑", "WOC!":"握草人", "THIN-K":"思考者", SHIT:"憤世者", ZZZZ:"裝死者", POOR:"貧困者", MONK:"僧人", IMSB:"傻者", SOLO:"孤兒", FUCK:"草者", DEAD:"死者", IMFW:"廢物", HHHH:"傻樂者", DRUNK:"酒鬼" },
+      ja: { CTRL:"支配者", "ATM-er":"貢ぎ屋", "Dior-s":"負け犬", BOSS:"リーダー", "THAN-K":"感謝マン", "OH-NO":"心配性", GOGO:"行動派", SEXY:"魅惑者", "LOVE-R":"恋愛脳", MUM:"お母さん", FAKE:"偽者", OJBK:"どうでもいい人", MALO:"おサル", "JOKE-R":"ピエロ", "WOC!":"驚き屋", "THIN-K":"思考者", SHIT:"厭世家", ZZZZ:"死んだふり", POOR:"貧乏人", MONK:"僧侶", IMSB:"おバカ", SOLO:"孤児", FUCK:"暴走族", DEAD:"死者", IMFW:"廃人", HHHH:"笑い屋", DRUNK:"酔っ払い" },
+      ko: { CTRL:"컨트롤러", "ATM-er":"돈 뿌리개", "Dior-s":"루저", BOSS:"리더", "THAN-K":"감사충", "OH-NO":"걱정충", GOGO:"행동파", SEXY:"매력쟁이", "LOVE-R":"연애뇌", MUM:"엄마", FAKE:"가짜", OJBK:"상관없는 사람", MALO:"원숭이", "JOKE-R":"광대", "WOC!":"헐 하는 사람", "THIN-K":"생각러", SHIT:"세상 싫어", ZZZZ:"죽은 척", POOR:"가난뱅이", MONK:"수도승", IMSB:"바보", SOLO:"고아", FUCK:"막나가", DEAD:"사망자", IMFW:"폐인", HHHH:"웃음벌레", DRUNK:"술꾼" },
+      de: { CTRL:"Der Kontrolleur", "ATM-er":"Der Geldgeber", "Dior-s":"Der Verlierer", BOSS:"Der Anführer", "THAN-K":"Der Dankbare", "OH-NO":"Der Oh-Nein", GOGO:"Der Macher", SEXY:"Der Verführer", "LOVE-R":"Der Romantiker", MUM:"Die Mutti", FAKE:"Der Falsche", OJBK:"Der Egal-Typ", MALO:"Der Affe", "JOKE-R":"Der Clown", "WOC!":"Der WTF-Typ", "THIN-K":"Der Denker", SHIT:"Der Welthasser", ZZZZ:"Der Totensteller", POOR:"Der Arme", MONK:"Der Mönch", IMSB:"Der Narr", SOLO:"Der Waise", FUCK:"Der Rebell", DEAD:"Der Tote", IMFW:"Der Nichtsnutz", HHHH:"Der Lacher", DRUNK:"Der Trinker" },
+      es: { CTRL:"El Controlador", "ATM-er":"El Cajero", "Dior-s":"El Perdedor", BOSS:"El Líder", "THAN-K":"El Agradecido", "OH-NO":"El Oh-No", GOGO:"El Hacedor", SEXY:"El Irresistible", "LOVE-R":"El Romántico", MUM:"La Mamá", FAKE:"El Falso", OJBK:"El Da-Igual", MALO:"El Mono", "JOKE-R":"El Payaso", "WOC!":"El WTF", "THIN-K":"El Pensador", SHIT:"El Odia-Mundo", ZZZZ:"El Muerto Viviente", POOR:"El Pobre", MONK:"El Monje", IMSB:"El Tonto", SOLO:"El Huérfano", FUCK:"El Rebelde", DEAD:"El Muerto", IMFW:"El Inútil", HHHH:"El Risitas", DRUNK:"El Borracho" },
+      fr: { CTRL:"Le Contrôleur", "ATM-er":"Le Distributeur", "Dior-s":"Le Looser", BOSS:"Le Leader", "THAN-K":"Le Reconnaissant", "OH-NO":"Le Oh-Non", GOGO:"Le Fonceur", SEXY:"Le Séducteur", "LOVE-R":"Le Romantique", MUM:"La Maman", FAKE:"Le Faux", OJBK:"Le Osef", MALO:"Le Singe", "JOKE-R":"Le Clown", "WOC!":"Le WTF", "THIN-K":"Le Penseur", SHIT:"Le Misanthrope", ZZZZ:"Le Mort-Vivant", POOR:"Le Pauvre", MONK:"Le Moine", IMSB:"Le Fou", SOLO:"L'Orphelin", FUCK:"Le Rebelle", DEAD:"Le Mort", IMFW:"Le Bon-à-Rien", HHHH:"Le Rieur", DRUNK:"L'Ivrogne" },
+      tr: { CTRL:"Kontrol Delisi", "ATM-er":"Para Dağıtan", "Dior-s":"Ezik", BOSS:"Lider", "THAN-K":"Şükredici", "OH-NO":"Oh-Hayır", GOGO:"Yapıcı", SEXY:"Baştan Çıkarıcı", "LOVE-R":"Aşk Delisi", MUM:"Anne", FAKE:"Sahte", OJBK:"Umursamaz", MALO:"Maymun", "JOKE-R":"Palyaço", "WOC!":"WTF-ci", "THIN-K":"Düşünür", SHIT:"Dünya Düşmanı", ZZZZ:"Ölü Taklitçi", POOR:"Fakir", MONK:"Keşiş", IMSB:"Aptal", SOLO:"Yetim", FUCK:"Asi", DEAD:"Ölü", IMFW:"İşe Yaramaz", HHHH:"Gülücük", DRUNK:"Sarhoş" },
+    };
+
+    // Translated dimension names per language
+    const DIM_NAMES_I18N = {
+      en: { S1:'S1 Self-Confidence', S2:'S2 Self-Clarity', S3:'S3 Core Values', E1:'E1 Attachment Security', E2:'E2 Emotional Investment', E3:'E3 Boundaries', A1:'A1 Worldview', A2:'A2 Rules vs Flexibility', A3:'A3 Sense of Meaning', Ac1:'Ac1 Motivation', Ac2:'Ac2 Decision Style', Ac3:'Ac3 Execution', So1:'So1 Social Initiative', So2:'So2 Interpersonal Boundaries', So3:'So3 Authenticity' },
+      ja: { S1:'S1 自尊心', S2:'S2 自己明確度', S3:'S3 核心価値', E1:'E1 愛着安全感', E2:'E2 感情投入度', E3:'E3 境界と依存', A1:'A1 世界観', A2:'A2 規則と柔軟性', A3:'A3 人生の意味', Ac1:'Ac1 動機の方向', Ac2:'Ac2 決断スタイル', Ac3:'Ac3 実行力', So1:'So1 社交性', So2:'So2 対人境界', So3:'So3 表現の真実度' },
+      ko: { S1:'S1 자존감', S2:'S2 자기명확도', S3:'S3 핵심가치', E1:'E1 애착안전감', E2:'E2 감정투입도', E3:'E3 경계와 의존', A1:'A1 세계관', A2:'A2 규칙과 유연성', A3:'A3 인생의 의미', Ac1:'Ac1 동기방향', Ac2:'Ac2 결정스타일', Ac3:'Ac3 실행력', So1:'So1 사회성', So2:'So2 대인경계', So3:'So3 표현진실도' },
+      de: { S1:'S1 Selbstvertrauen', S2:'S2 Selbstklarheit', S3:'S3 Kernwerte', E1:'E1 Bindungssicherheit', E2:'E2 Emotionale Investition', E3:'E3 Grenzen', A1:'A1 Weltanschauung', A2:'A2 Regeln vs Flexibilität', A3:'A3 Sinnhaftigkeit', Ac1:'Ac1 Motivation', Ac2:'Ac2 Entscheidungsstil', Ac3:'Ac3 Umsetzung', So1:'So1 Soziale Initiative', So2:'So2 Zwischenmenschliche Grenzen', So3:'So3 Authentizität' },
+      es: { S1:'S1 Autoconfianza', S2:'S2 Claridad Personal', S3:'S3 Valores Centrales', E1:'E1 Seguridad Afectiva', E2:'E2 Inversión Emocional', E3:'E3 Límites', A1:'A1 Visión del Mundo', A2:'A2 Reglas vs Flexibilidad', A3:'A3 Sentido de Vida', Ac1:'Ac1 Motivación', Ac2:'Ac2 Estilo de Decisión', Ac3:'Ac3 Ejecución', So1:'So1 Iniciativa Social', So2:'So2 Límites Interpersonales', So3:'So3 Autenticidad' },
+      fr: { S1:'S1 Confiance en Soi', S2:'S2 Clarté Personnelle', S3:'S3 Valeurs Fondamentales', E1:'E1 Sécurité Affective', E2:'E2 Investissement Émotionnel', E3:'E3 Limites', A1:'A1 Vision du Monde', A2:'A2 Règles vs Flexibilité', A3:'A3 Sens de la Vie', Ac1:'Ac1 Motivation', Ac2:'Ac2 Style de Décision', Ac3:'Ac3 Exécution', So1:'So1 Initiative Sociale', So2:'So2 Limites Interpersonnelles', So3:'So3 Authenticité' },
+      tr: { S1:'S1 Özgüven', S2:'S2 Öz Netlik', S3:'S3 Temel Değerler', E1:'E1 Bağlanma Güvenliği', E2:'E2 Duygusal Yatırım', E3:'E3 Sınırlar', A1:'A1 Dünya Görüşü', A2:'A2 Kurallar vs Esneklik', A3:'A3 Anlam Duygusu', Ac1:'Ac1 Motivasyon', Ac2:'Ac2 Karar Stili', Ac3:'Ac3 Uygulama', So1:'So1 Sosyal İnisiyatif', So2:'So2 Kişilerarası Sınırlar', So3:'So3 Özgünlük' },
+    };
+
+    // Translated dimension explanations (English only, others fall back to zh-CN)
+    const DIM_EXPLANATIONS_I18N = {
+      en: {
+        S1: { L: "Harder on yourself than anyone else. Compliments make you suspicious.", M: "Confidence fluctuates with the weather — soaring when things go well, shrinking when they don't.", H: "You have a solid sense of self. Random comments don't shake you." },
+        S2: { L: "Inner channel full of static. Stuck in a 'who am I' loop.", M: "Usually recognize yourself, but emotions can temporarily hijack the signal.", H: "You know your temper, desires, and boundaries pretty well." },
+        S3: { L: "Comfort and safety first. No need to run life in sprint mode.", M: "Want to level up, but also want to lie down. Values committee is always in session.", H: "Easily driven by goals, growth, or some strong belief." },
+        E1: { L: "Relationship alarm goes off easily. Being left on read triggers worst-case scenarios.", M: "Half trust, half suspicion. An emotional tug-of-war.", H: "More willing to trust. Small bumps don't scare you off." },
+        E2: { L: "Emotionally guarded. The door isn't closed, just heavily secured.", M: "Willing to invest, but keep a safety net. Never go all-in.", H: "Once committed, you're serious. Give your energy and emotions fully." },
+        E3: { L: "Tend to cling and be clung to. Emotional warmth matters a lot.", M: "Need both closeness and independence. Adjustable attachment style.", H: "Personal space is sacred. Even in love, you keep a piece for yourself." },
+        A1: { L: "See the world through a defensive filter. Doubt first, approach later.", M: "Neither naive nor full conspiracy theorist. Watching is your default.", H: "More willing to believe in goodness. Don't rush to condemn the world." },
+        A2: { L: "Rules are meant to be bent. Comfort and freedom come first.", M: "Follow rules when needed, bend them when appropriate.", H: "Strong sense of order. Prefer following process over improvising." },
+        A3: { L: "Low sense of meaning. Much of life feels like going through the motions.", M: "Sometimes goal-oriented, sometimes wanting to give up. Life philosophy: half-booted.", H: "More directed. Know roughly where you're heading." },
+        Ac1: { L: "Risk-avoidance system fires before ambition does.", M: "Sometimes want to win, sometimes just want no trouble. Mixed motives.", H: "Easily ignited by results, growth, and progress." },
+        Ac2: { L: "Tend to overthink before deciding. Internal meetings always run overtime.", M: "Think it through but don't crash. Normal level of hesitation.", H: "Quick to decide. Once decided, don't look back." },
+        Ac3: { L: "Execution and deadlines have a deep relationship. Peak performance near the wire.", M: "Can do, but depends on timing. Sometimes steady, sometimes not.", H: "Strong urge to push forward. Unfinished tasks feel like a splinter." },
+        So1: { L: "Slow to warm up socially. Taking initiative requires charging up.", M: "Engage when approached, don't force it otherwise. Average social flexibility.", H: "Happy to open the floor. Don't mind standing out in a crowd." },
+        So2: { L: "Lean toward closeness. Once comfortable, easily pull people into the inner circle.", M: "Want both closeness and space. Boundaries adjust by person.", H: "Strong boundary sense. Instinctively step back when someone gets too close." },
+        So3: { L: "Express directly. What's on your mind is what comes out.", M: "Read the room. Balance between real and polite.", H: "Skilled at switching selves for different contexts. Authenticity is layered." },
+      }
+    };
+
+    // Helper: get translated type name
+    function getTypeName(code) {
+      const names = TYPE_NAMES_I18N[currentLang] || TYPE_NAMES_I18N['zh-CN'];
+      return names[code] || TYPE_LIBRARY[code]?.cn || code;
+    }
+
+    // Helper: get translated dimension name
+    function getDimName(dim) {
+      const names = DIM_NAMES_I18N[currentLang];
+      if (names && names[dim]) return names[dim];
+      return dimensionMeta[dim]?.name || dim;
+    }
+
+    // Helper: get translated dimension explanation
+    function getDimExplanation(dim, level) {
+      const langExpl = DIM_EXPLANATIONS_I18N[currentLang];
+      if (langExpl && langExpl[dim] && langExpl[dim][level]) return langExpl[dim][level];
+      return DIM_EXPLANATIONS[dim]?.[level] || '';
+    }
 
     const TYPE_IMAGES = {
       "IMSB": "./image/IMSB.png", "BOSS": "./image/BOSS.png", "MUM": "./image/MUM.png",
@@ -1192,7 +1285,7 @@
       if (refType && TYPE_LIBRARY[refType]) {
         const tp = TYPE_LIBRARY[refType];
         const teaser = document.getElementById('referralTeaser');
-        teaser.textContent = t('referralTpl', { code: tp.code, cn: tp.cn });
+        teaser.textContent = t('referralTpl', { code: tp.code, cn: getTypeName(tp.code) });
         teaser.style.display = 'block';
       }
     })();
@@ -1389,7 +1482,7 @@
       const type = r.finalType;
       document.getElementById('posterImage').src = TYPE_IMAGES[type.code] || '';
       document.getElementById('resultKicker').textContent = r.kicker;
-      document.getElementById('resultTypeName').textContent = `${type.code}（${type.cn}）`;
+      document.getElementById('resultTypeName').textContent = `${type.code}（${getTypeName(type.code)}）`;
       document.getElementById('matchBadge').textContent = r.badge;
       document.getElementById('resultTypeSub').textContent = r.sub;
       document.getElementById('analysisText').textContent = r.analysis;
@@ -1404,11 +1497,11 @@
       const dimList = document.getElementById('dimList');
       dimList.innerHTML = dimensionOrder.map(dim => {
         const level = r.dimensions[dim] || 'M';
-        const explanation = DIM_EXPLANATIONS[dim][level];
+        const explanation = getDimExplanation(dim, level);
         return `
           <div class="dim-item">
             <div class="dim-item-top">
-              <div class="dim-item-name">${dimensionMeta[dim].name}</div>
+              <div class="dim-item-name">${getDimName(dim)}</div>
               <div class="dim-item-score">${level}</div>
             </div>
             <p>${explanation}</p>
@@ -1434,7 +1527,7 @@
     function getShareText() {
       const type = currentResult?.finalType;
       if (!type) return '';
-      return t('shareTpl', { code: type.code, cn: type.cn });
+      return t('shareTpl', { code: type.code, cn: getTypeName(type.code) });
     }
 
     // Share to Twitter
@@ -1504,7 +1597,7 @@
 
       ctx.fillStyle = '#ffd700';
       ctx.font = 'bold 32px sans-serif';
-      ctx.fillText(`（${type.cn}）`, W / 2, 210);
+      ctx.fillText(`（${getTypeName(type.code)}）`, W / 2, 210);
 
       // Match badge
       ctx.fillStyle = '#a29bfe';
@@ -1531,7 +1624,7 @@
         const x = col === 0 ? 60 : 420;
         if (col === 0 && i > 0) y += 32;
         ctx.fillStyle = '#8888a8';
-        ctx.fillText(dimensionMeta[dim].name, x, y);
+        ctx.fillText(getDimName(dim), x, y);
         ctx.fillStyle = level === 'H' ? '#2ecc71' : level === 'L' ? '#e74c3c' : '#f39c12';
         ctx.fillText(level, x + 200, y);
       });
