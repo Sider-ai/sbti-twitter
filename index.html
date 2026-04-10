@@ -946,7 +946,18 @@
       },
     };
 
-    let currentLang = localStorage.getItem('sbti-lang') || 'en';
+    let currentLang = localStorage.getItem('sbti-lang') || (() => {
+      const nav = navigator.language || '';
+      if (nav.startsWith('zh-TW') || nav.startsWith('zh-Hant')) return 'zh-TW';
+      if (nav.startsWith('zh')) return 'zh-CN';
+      if (nav.startsWith('ja')) return 'ja';
+      if (nav.startsWith('ko')) return 'ko';
+      if (nav.startsWith('de')) return 'de';
+      if (nav.startsWith('es')) return 'es';
+      if (nav.startsWith('fr')) return 'fr';
+      if (nav.startsWith('tr')) return 'tr';
+      return 'en';
+    })();
     if (!(currentLang in I18N)) currentLang = 'en';
 
     function t(key, vars) {
