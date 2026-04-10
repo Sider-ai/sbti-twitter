@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SBTI x Twitter — AI 读推文，揭穿你的灵魂</title>
+  <meta property="og:title" content="SBTI x Twitter — AI 人格分析" />
+  <meta property="og:description" content="让 AI 读你的 20 条推文，揭穿你是哪种 SBTI 人格" />
+  <meta property="og:url" content="https://sbti.sider.ai" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --bg: #0a0a14;
+      --bg2: #12121f;
+      --panel: #1a1a2e;
+      --panel-border: #2a2a44;
+      --text: #e8e8f0;
+      --muted: #8888a8;
+      --accent: #7c6cf0;
+      --accent-strong: #a29bfe;
+      --accent-glow: rgba(124,108,240,0.15);
+      --gold: #ffd700;
+      --shadow: 0 16px 40px rgba(10, 10, 20, 0.5);
+      --radius: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .shell {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 16px 80px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ===== HEADER ===== */
+    .header {
+      text-align: center;
+      padding: 16px;
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.05em;
+    }
+    .header a { color: var(--accent-strong); text-decoration: none; }
+
+    /* ===== LANDING ===== */
+    .hero {
+      padding: 60px 28px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -120px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .badge-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 12px; color: var(--accent-strong);
+      border: 1px solid var(--panel-border);
+      background: var(--bg2);
+      border-radius: 999px; padding: 8px 14px;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--accent-strong));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .sub {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    .input-group {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      max-width: 440px;
+      margin-left: auto; margin-right: auto;
+    }
+    .input-group input {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      background: var(--bg2);
+      color: var(--text);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus {
+      border-color: var(--accent);
+    }
+    .input-group input::placeholder { color: var(--muted); }
+
+    button {
+      border: 0; cursor: pointer;
+      font: inherit;
+      transition: transform 0.16s, box-shadow 0.16s, opacity 0.16s;
+    }
+    button:hover { transform: translateY(-1px); }
+    button:disabled { cursor: not-allowed; opacity: 0.5; transform: none; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #9b59b6);
+      color: #fff;
+      padding: 14px 24px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 15px;
+      box-shadow: 0 8px 24px rgba(124,108,240,0.25);
+      white-space: nowrap;
+    }
+    .btn-secondary {
+      background: var(--bg2);
+      color: var(--accent-strong);
+      padding: 14px 20px;
+      border-radius: 14px;
+      border: 1px solid var(--panel-border);
+      font-weight: 700;
+    }
+    .btn-share {
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-twitter { background: #1da1f2; color: #fff; }
+    .btn-copy { background: var(--bg2); color: var(--text); border: 1px solid var(--panel-border); }
+    .btn-download { background: var(--bg2); color: var(--text); border: 1px solid var(--panel-border); }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 36px;
+      padding: 0 8px;
+    }
+    .feature-item {
+      border: 1px solid var(--panel-border);
+      border-radius: 16px;
+      padding: 18px;
+      background: var(--bg2);
+      text-align: left;
+    }
+    .feature-item .icon { font-size: 24px; margin-bottom: 8px; }
+    .feature-item h3 { font-size: 14px; margin-bottom: 4px; }
+    .feature-item p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+    /* ===== INSTALL GUIDE ===== */
+    .install-wrap {
+      padding: 48px 28px;
+      text-align: center;
+    }
+    .install-wrap h2 { font-size: 24px; margin-bottom: 12px; }
+    .install-wrap p { color: var(--muted); font-size: 15px; margin-bottom: 24px; max-width: 460px; margin-left: auto; margin-right: auto; }
+    .install-wrap .install-steps {
+      display: flex; flex-direction: column; gap: 16px;
+      max-width: 400px; margin: 0 auto 24px;
+      text-align: left;
+    }
+    .install-step {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px;
+      border: 1px solid var(--panel-border);
+      border-radius: 14px;
+      background: var(--bg2);
+    }
+    .install-step .num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff; font-weight: 800; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .install-step .step-text { font-size: 14px; }
+    .install-step .step-text span { color: var(--muted); font-size: 12px; display: block; margin-top: 2px; }
+    .checking-text { color: var(--accent-strong); font-size: 13px; margin-top: 16px; }
+    .checking-text.found { color: #2ecc71; }
+
+    /* ===== LOADING ===== */
+    .loading-wrap {
+      padding: 80px 28px;
+      text-align: center;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 3px solid var(--panel-border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 24px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-steps {
+      display: flex; flex-direction: column; gap: 10px;
+      max-width: 340px; margin: 0 auto;
+      text-align: left;
+    }
+    .loading-step {
+      font-size: 14px; color: var(--muted);
+      display: flex; align-items: center; gap: 10px;
+      transition: color 0.3s;
+    }
+    .loading-step.active { color: var(--accent-strong); }
+    .loading-step.done { color: #2ecc71; }
+    .loading-step .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--panel-border); flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .loading-step.active .dot { background: var(--accent); animation: pulse 1s infinite; }
+    .loading-step.done .dot { background: #2ecc71; }
+    @keyframes pulse { 50% { opacity: 0.4; } }
+
+    /* ===== RESULT ===== */
+    .result-wrap { padding: 24px; }
+    .result-layout { display: grid; gap: 18px; }
+    .result-top {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 18px; align-items: stretch;
+    }
+    .poster-box, .type-box, .analysis-box, .dim-box, .evidence-box, .note-box {
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      padding: 20px;
+      background: linear-gradient(180deg, var(--panel), var(--bg2));
+    }
+    .poster-box {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      min-height: 260px;
+      position: relative; overflow: hidden;
+    }
+    .poster-box::after {
+      content: "";
+      position: absolute; right: -40px; bottom: -40px;
+      width: 120px; height: 120px; border-radius: 50%;
+      background: var(--accent-glow);
+      pointer-events: none;
+    }
+    .poster-image {
+      width: 100%; max-height: 380px;
+      object-fit: contain; border-radius: 14px;
+      position: relative; z-index: 1;
+    }
+    .type-kicker {
+      font-size: 12px; color: var(--accent-strong);
+      letter-spacing: 0.06em; margin-bottom: 8px;
+    }
+    .type-name {
+      font-size: clamp(28px, 5vw, 44px);
+      line-height: 1.1; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #fff 30%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .type-subname {
+      margin-top: 10px; color: var(--muted); font-size: 14px; line-height: 1.7;
+    }
+    .match-badge {
+      margin-top: 16px;
+      display: inline-flex; align-items: center; gap: 8px;
+      border-radius: 999px; padding: 10px 16px;
+      background: var(--accent-glow);
+      border: 1px solid var(--panel-border);
+      color: var(--accent-strong); font-weight: 700; font-size: 14px;
+    }
+
+    .section-title {
+      font-size: 16px; font-weight: 700; margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .section-title::before {
+      content: ""; width: 3px; height: 16px;
+      background: var(--accent); border-radius: 2px;
+    }
+
+    .analysis-text {
+      color: var(--text); font-size: 15px; line-height: 1.9;
+      white-space: pre-wrap;
+    }
+
+    .dim-list { display: grid; gap: 10px; }
+    .dim-item {
+      border: 1px solid var(--panel-border);
+      border-radius: 14px; padding: 14px;
+      background: var(--bg2);
+    }
+    .dim-item-top {
+      display: flex; justify-content: space-between;
+      align-items: baseline; gap: 10px; margin-bottom: 6px;
+    }
+    .dim-item-name { font-size: 14px; font-weight: 700; }
+    .dim-item-score {
+      color: var(--accent-strong); font-weight: 800; font-size: 14px;
+      white-space: nowrap;
+    }
+    .dim-item p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .evidence-list { display: grid; gap: 10px; }
+    .evidence-item {
+      border: 1px solid var(--panel-border);
+      border-radius: 14px; padding: 14px;
+      background: var(--bg2);
+      font-size: 14px; line-height: 1.7;
+      color: var(--text);
+      position: relative; padding-left: 28px;
+    }
+    .evidence-item::before {
+      content: "\201C"; position: absolute;
+      left: 10px; top: 8px;
+      font-size: 24px; color: var(--accent);
+      font-family: Georgia, serif;
+    }
+
+    .note-box p { color: var(--muted); font-size: 13px; line-height: 1.8; }
+
+    .share-section {
+      margin-top: 24px;
+      border: 1px solid var(--panel-border);
+      border-radius: 18px; padding: 20px;
+      background: linear-gradient(180deg, var(--panel), var(--bg2));
+    }
+    .share-buttons {
+      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px;
+    }
+
+    .result-footer {
+      margin-top: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; flex-wrap: wrap;
+    }
+
+    .referral-banner {
+      background: linear-gradient(135deg, var(--accent-glow), rgba(155,89,182,0.1));
+      border: 1px solid var(--panel-border);
+      border-radius: 18px; padding: 24px;
+      text-align: center; margin-top: 18px;
+    }
+    .referral-banner h3 { font-size: 18px; margin-bottom: 8px; }
+    .referral-banner p { color: var(--muted); font-size: 14px; }
+
+    /* ===== LANG SWITCHER ===== */
+    .lang-switcher {
+      position: relative; display: inline-block;
+    }
+    .lang-btn {
+      background: var(--bg2); color: var(--muted);
+      border: 1px solid var(--panel-border);
+      padding: 5px 12px; border-radius: 8px;
+      font-size: 12px; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .lang-btn:hover { color: var(--text); transform: none; }
+    .lang-dropdown {
+      display: none;
+      position: absolute; top: 100%; right: 0; margin-top: 4px;
+      background: var(--panel); border: 1px solid var(--panel-border);
+      border-radius: 10px; padding: 4px; min-width: 140px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 100;
+    }
+    .lang-dropdown.open { display: block; }
+    .lang-option {
+      display: block; width: 100%;
+      padding: 8px 12px; border-radius: 6px;
+      background: none; color: var(--text);
+      font-size: 13px; text-align: left;
+      border: none; cursor: pointer;
+    }
+    .lang-option:hover { background: var(--bg2); transform: none; }
+    .lang-option.active { color: var(--accent-strong); }
+
+    /* ===== SHARE CARD CANVAS (hidden) ===== */
+    #shareCanvas { display: none; }
+
+    /* ===== ERROR ===== */
+    .error-box {
+      background: rgba(231,76,60,0.1);
+      border: 1px solid rgba(231,76,60,0.3);
+      border-radius: 14px; padding: 18px;
+      color: #e74c3c; text-align: center;
+      margin-top: 20px;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 700px) {
+      .result-top { grid-template-columns: 1fr; }
+      .features { grid-template-columns: 1fr; }
+      .hero { padding: 40px 20px 30px; }
+      .input-group { flex-direction: column; }
+      .share-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="header" style="display:flex; justify-content:space-between; align-items:center;">
+      <span>SBTI x Twitter &mdash; Powered by <a href="https://sider.ai" target="_blank">Sider AI</a></span>
+      <div class="lang-switcher">
+        <button class="lang-btn" id="langBtn">&#x1F310; <span id="langLabel">中文</span> &#x25BE;</button>
+        <div class="lang-dropdown" id="langDropdown"></div>
+      </div>
+    </div>
+
+    <!-- ===== SCREEN 1: LANDING ===== -->
+    <section id="landing" class="screen active">
+      <div class="hero card">
+        <div class="badge-tag">&#x1F9E0; <span data-i18n="badge">SBTI AI 人格分析</span></div>
+        <h1 data-i18n="heroTitle">让 AI 读你的推文<br/>揭穿你的灵魂</h1>
+        <p class="sub" data-i18n="heroSub">基于 SBTI 人格框架 15 维度 · 5 大模型 · 27 种人格<br/>20 条推文，足以看透你</p>
+
+        <div class="input-group">
+          <input type="text" id="handleInput" data-i18n-placeholder="inputPlaceholder" placeholder="输入你的 Twitter 用户名，如 elonmusk" />
+          <button id="startBtn" class="btn-primary" data-i18n="startBtn">开始分析</button>
+        </div>
+
+        <div id="referralTeaser" style="display:none; margin-top:20px; color:var(--accent-strong); font-size:14px;"></div>
+
+        <div class="features">
+          <div class="feature-item">
+            <div class="icon">&#x1F50D;</div>
+            <h3 data-i18n="feat1Title">AI 深度解读</h3>
+            <p data-i18n="feat1Desc">不是答题，是让 AI 直接读你说过的话来分析你的人格</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">&#x1F3AF;</div>
+            <h3 data-i18n="feat2Title">15 维度分析</h3>
+            <p data-i18n="feat2Desc">自我、情感、态度、行动、社交五大模型全方位扫描</p>
+          </div>
+          <div class="feature-item">
+            <div class="icon">&#x1F4E2;</div>
+            <h3 data-i18n="feat3Title">一键分享</h3>
+            <p data-i18n="feat3Desc">生成专属人格卡片，分享到 Twitter 让朋友也来测</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 2: INSTALL GUIDE ===== -->
+    <section id="install" class="screen">
+      <div class="install-wrap card">
+        <h2 data-i18n="installTitle">&#x1F50C; 需要 Sider 浏览器助手</h2>
+        <p data-i18n="installDesc">Sider 会帮你安全地读取公开推文内容，全程不存储任何数据</p>
+
+        <div class="install-steps">
+          <div class="install-step">
+            <div class="num">1</div>
+            <div class="step-text">
+              <span data-i18n="installStep1">点击下方按钮安装 Sider 插件</span>
+              <span data-i18n="installStep1Sub">Chrome / Edge 均可使用</span>
+            </div>
+          </div>
+          <div class="install-step">
+            <div class="num">2</div>
+            <div class="step-text">
+              <span data-i18n="installStep2">安装完成后回到此页面</span>
+              <span data-i18n="installStep2Sub">系统会自动检测并继续分析</span>
+            </div>
+          </div>
+        </div>
+
+        <a href="https://chromewebstore.google.com/detail/sider/difoiogjjojoaoomphldepapgpbgkhkb" target="_blank">
+          <button class="btn-primary" data-i18n="installBtn">&#x1F4E5; 安装 Sider 插件</button>
+        </a>
+        <div id="checkingStatus" class="checking-text" data-i18n="checking">正在检测插件安装状态...</div>
+
+        <div style="margin-top: 20px;">
+          <button id="backFromInstall" class="btn-secondary" data-i18n="backHome">返回首页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 3: LOADING ===== -->
+    <section id="loading" class="screen">
+      <div class="loading-wrap card">
+        <div class="spinner"></div>
+        <h2 style="margin-bottom: 24px;" data-i18n="analyzing">分析中...</h2>
+
+        <div class="loading-steps">
+          <div class="loading-step" id="step1">
+            <div class="dot"></div>
+            <span data-i18n="loadStep1">正在打开推特主页...</span>
+          </div>
+          <div class="loading-step" id="step2">
+            <div class="dot"></div>
+            <span data-i18n="loadStep2">正在读取最近 20 条推文...</span>
+          </div>
+          <div class="loading-step" id="step3">
+            <div class="dot"></div>
+            <span data-i18n="loadStep3">AI 正在审判你的灵魂...</span>
+          </div>
+          <div class="loading-step" id="step4">
+            <div class="dot"></div>
+            <span data-i18n="loadStep4">正在匹配 27 种人格...</span>
+          </div>
+        </div>
+
+        <div id="loadingError" class="error-box" style="display:none;"></div>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN 4: RESULT ===== -->
+    <section id="result" class="screen">
+      <div class="result-wrap card">
+        <div class="result-layout">
+          <div class="result-top">
+            <div class="poster-box">
+              <img id="posterImage" class="poster-image" alt="人格结果图" />
+            </div>
+            <div class="type-box">
+              <div class="type-kicker" id="resultKicker">你的 SBTI 人格</div>
+              <div class="type-name" id="resultTypeName"></div>
+              <div class="match-badge" id="matchBadge"></div>
+              <div class="type-subname" id="resultTypeSub"></div>
+            </div>
+          </div>
+
+          <div class="analysis-box">
+            <div class="section-title" data-i18n="sectionAnalysis">AI 个性化解读</div>
+            <p class="analysis-text" id="analysisText"></p>
+          </div>
+
+          <div class="evidence-box">
+            <div class="section-title" data-i18n="sectionEvidence">暴露你人格的推文</div>
+            <div id="evidenceList" class="evidence-list"></div>
+          </div>
+
+          <div class="dim-box">
+            <div class="section-title" data-i18n="sectionDims">十五维度评分</div>
+            <div id="dimList" class="dim-list"></div>
+          </div>
+
+          <div class="note-box">
+            <div class="section-title" data-i18n="sectionNote">友情提示</div>
+            <p data-i18n="noteText">本测试基于 AI 对公开推文的分析，仅供娱乐。别拿它当诊断、面试、相亲、分手、招魂、算命或人生判决书。AI 也有看走眼的时候。</p>
+          </div>
+        </div>
+
+        <div class="share-section">
+          <div class="section-title" data-i18n="sectionShare">分享你的结果</div>
+          <p style="color:var(--muted); font-size:13px; margin-bottom:10px;" data-i18n="shareDesc">让你的朋友也来看看 AI 怎么评价他们</p>
+          <div class="share-buttons">
+            <button id="shareTwitterBtn" class="btn-share btn-twitter" data-i18n="shareTwitter">&#x1D54F; 分享到 Twitter</button>
+            <button id="copyLinkBtn" class="btn-share btn-copy" data-i18n="copyLink">&#x1F517; 复制链接</button>
+            <button id="downloadImgBtn" class="btn-share btn-download" data-i18n="downloadImg">&#x1F4F7; 下载分享卡</button>
+          </div>
+        </div>
+
+        <div class="referral-banner">
+          <h3 data-i18n="referralTitle">你的朋友是什么人格？</h3>
+          <p data-i18n="referralDesc">把链接发给他们，看看 AI 怎么评价他们的推文</p>
+        </div>
+
+        <div class="result-footer">
+          <button id="retryBtn" class="btn-secondary" data-i18n="retryBtn">换一个账号分析</button>
+          <a href="https://sbti-test.com" target="_blank" style="color:var(--accent-strong); font-size:13px;" data-i18n="fullTest">去做完整 SBTI 答题测试 &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <canvas id="shareCanvas" width="800" height="1200"></canvas>
+  </div>
+
+  <script>
+    // =============================================
+    //  I18N SYSTEM
+    // =============================================
+    const LANGS = {
+      'zh-CN': '简体中文',
+      'zh-TW': '繁體中文',
+      'en': 'English',
+      'ja': '日本語',
+      'ko': '한국어',
+      'de': 'Deutsch',
+      'es': 'Español',
+      'fr': 'Français',
+      'tr': 'Türkçe'
+    };
+
+    const I18N = {
+      'zh-CN': {
+        badge: 'SBTI AI 人格分析',
+        heroTitle: '让 AI 读你的推文<br/>揭穿你的灵魂',
+        heroSub: '基于 SBTI 人格框架 15 维度 · 5 大模型 · 27 种人格<br/>20 条推文，足以看透你',
+        inputPlaceholder: '输入你的 Twitter 用户名，如 elonmusk',
+        startBtn: '开始分析',
+        feat1Title: 'AI 深度解读', feat1Desc: '不是答题，是让 AI 直接读你说过的话来分析你的人格',
+        feat2Title: '15 维度分析', feat2Desc: '自我、情感、态度、行动、社交五大模型全方位扫描',
+        feat3Title: '一键分享', feat3Desc: '生成专属人格卡片，分享到 Twitter 让朋友也来测',
+        installTitle: '🔌 需要 Sider 浏览器助手',
+        installDesc: 'Sider 会帮你安全地读取公开推文内容，全程不存储任何数据',
+        installStep1: '点击下方按钮安装 Sider 插件', installStep1Sub: 'Chrome / Edge 均可使用',
+        installStep2: '安装完成后回到此页面', installStep2Sub: '系统会自动检测并继续分析',
+        installBtn: '📥 安装 Sider 插件',
+        checking: '正在检测插件安装状态...',
+        checkingFound: '已检测到 Sider 插件！正在开始分析...',
+        backHome: '返回首页',
+        analyzing: '分析中...',
+        loadStep1: '正在打开推特主页...', loadStep2: '正在读取最近 20 条推文...',
+        loadStep3: 'AI 正在审判你的灵魂...', loadStep4: '正在匹配 27 种人格...',
+        sectionAnalysis: 'AI 个性化解读',
+        sectionEvidence: '暴露你人格的推文',
+        sectionDims: '十五维度评分',
+        sectionNote: '友情提示',
+        noteText: '本测试基于 AI 对公开推文的分析，仅供娱乐。别拿它当诊断、面试、相亲、分手、招魂、算命或人生判决书。AI 也有看走眼的时候。',
+        sectionShare: '分享你的结果',
+        shareDesc: '让你的朋友也来看看 AI 怎么评价他们',
+        shareTwitter: '𝕏 分享到 Twitter', copyLink: '🔗 复制链接', downloadImg: '📷 下载分享卡',
+        copied: '✓ 已复制',
+        referralTitle: '你的朋友是什么人格？',
+        referralDesc: '把链接发给他们，看看 AI 怎么评价他们的推文',
+        retryBtn: '换一个账号分析',
+        fullTest: '去做完整 SBTI 答题测试 →',
+        yourType: '你的 SBTI 人格',
+        fallback: '系统强制兜底',
+        matchTpl: '匹配度 {s}% · 精准命中 {e}/15 维',
+        fallbackBadge: '标准人格库最高匹配仅 {s}%',
+        fallbackSub: '标准人格库对你的脑回路集体罢工了。',
+        shareTpl: '我的 SBTI 人格是 {code}（{cn}）！AI 读了我 20 条推文就看透了我 😂 来测测你的 →',
+        referralTpl: '你的朋友测出了 {code}（{cn}），来看看 AI 怎么评价你的推文',
+        errorTpl: '分析失败：{msg}',
+        noTweets: '未能获取到推文，该账号可能是私密账号或没有推文',
+        cardFooter: '来测测你的推文暴露了什么 → sbti.sider.ai',
+        webShareMore: '📲 更多分享方式',
+      },
+      'zh-TW': {
+        badge: 'SBTI AI 人格分析',
+        heroTitle: '讓 AI 讀你的推文<br/>揭穿你的靈魂',
+        heroSub: '基於 SBTI 人格框架 15 維度 · 5 大模型 · 27 種人格<br/>20 條推文，足以看透你',
+        inputPlaceholder: '輸入你的 Twitter 用戶名，如 elonmusk',
+        startBtn: '開始分析',
+        feat1Title: 'AI 深度解讀', feat1Desc: '不是答題，是讓 AI 直接讀你說過的話來分析你的人格',
+        feat2Title: '15 維度分析', feat2Desc: '自我、情感、態度、行動、社交五大模型全方位掃描',
+        feat3Title: '一鍵分享', feat3Desc: '生成專屬人格卡片，分享到 Twitter 讓朋友也來測',
+        installTitle: '🔌 需要 Sider 瀏覽器助手',
+        installDesc: 'Sider 會幫你安全地讀取公開推文內容，全程不存儲任何數據',
+        installStep1: '點擊下方按鈕安裝 Sider 插件', installStep1Sub: 'Chrome / Edge 均可使用',
+        installStep2: '安裝完成後回到此頁面', installStep2Sub: '系統會自動檢測並繼續分析',
+        installBtn: '📥 安裝 Sider 插件',
+        checking: '正在檢測插件安裝狀態...',
+        checkingFound: '已檢測到 Sider 插件！正在開始分析...',
+        backHome: '返回首頁',
+        analyzing: '分析中...',
+        loadStep1: '正在打開推特主頁...', loadStep2: '正在讀取最近 20 條推文...',
+        loadStep3: 'AI 正在審判你的靈魂...', loadStep4: '正在匹配 27 種人格...',
+        sectionAnalysis: 'AI 個性化解讀', sectionEvidence: '暴露你人格的推文',
+        sectionDims: '十五維度評分', sectionNote: '友情提示',
+        noteText: '本測試基於 AI 對公開推文的分析，僅供娛樂。別拿它當診斷、面試、相親、分手、招魂、算命或人生判決書。AI 也有看走眼的時候。',
+        sectionShare: '分享你的結果', shareDesc: '讓你的朋友也來看看 AI 怎麼評價他們',
+        shareTwitter: '𝕏 分享到 Twitter', copyLink: '🔗 複製連結', downloadImg: '📷 下載分享卡',
+        copied: '✓ 已複製',
+        referralTitle: '你的朋友是什麼人格？', referralDesc: '把連結發給他們，看看 AI 怎麼評價他們的推文',
+        retryBtn: '換一個帳號分析', fullTest: '去做完整 SBTI 答題測試 →',
+        yourType: '你的 SBTI 人格', fallback: '系統強制兜底',
+        matchTpl: '匹配度 {s}% · 精準命中 {e}/15 維', fallbackBadge: '標準人格庫最高匹配僅 {s}%',
+        fallbackSub: '標準人格庫對你的腦回路集體罷工了。',
+        shareTpl: '我的 SBTI 人格是 {code}（{cn}）！AI 讀了我 20 條推文就看透了我 😂 來測測你的 →',
+        referralTpl: '你的朋友測出了 {code}（{cn}），來看看 AI 怎麼評價你的推文',
+        errorTpl: '分析失敗：{msg}', noTweets: '未能獲取到推文，該帳號可能是私密帳號或沒有推文',
+        cardFooter: '來測測你的推文暴露了什麼 → sbti.sider.ai', webShareMore: '📲 更多分享方式',
+      },
+      en: {
+        badge: 'SBTI AI Personality Test',
+        heroTitle: 'Let AI Read Your Tweets<br/>and Expose Your Soul',
+        heroSub: 'SBTI Framework · 15 Dimensions · 5 Models · 27 Types<br/>20 tweets is all it takes to see through you',
+        inputPlaceholder: 'Enter your Twitter username, e.g. elonmusk',
+        startBtn: 'Start Analysis',
+        feat1Title: 'AI Deep Reading', feat1Desc: 'No quizzes — AI reads what you\'ve actually said to analyze your personality',
+        feat2Title: '15 Dimensions', feat2Desc: 'Self, Emotion, Attitude, Action, Social — full spectrum personality scan',
+        feat3Title: 'One-Click Share', feat3Desc: 'Generate a personality card and share on Twitter for friends to try',
+        installTitle: '🔌 Sider Browser Extension Required',
+        installDesc: 'Sider safely reads public tweets — no data is stored',
+        installStep1: 'Click below to install Sider', installStep1Sub: 'Works on Chrome / Edge',
+        installStep2: 'Come back to this page after install', installStep2Sub: 'We\'ll auto-detect and continue',
+        installBtn: '📥 Install Sider Extension',
+        checking: 'Checking extension status...',
+        checkingFound: 'Sider detected! Starting analysis...',
+        backHome: 'Back to Home',
+        analyzing: 'Analyzing...',
+        loadStep1: 'Opening your Twitter profile...', loadStep2: 'Reading your last 20 tweets...',
+        loadStep3: 'AI is judging your soul...', loadStep4: 'Matching against 27 personality types...',
+        sectionAnalysis: 'AI Personalized Analysis', sectionEvidence: 'Tweets That Exposed You',
+        sectionDims: '15-Dimension Scores', sectionNote: 'Disclaimer',
+        noteText: 'This test is based on AI analysis of public tweets, for entertainment only. Don\'t use it for diagnosis, hiring, dating, breakups, fortune-telling, or life decisions. AI gets it wrong sometimes too.',
+        sectionShare: 'Share Your Result', shareDesc: 'Let your friends see what AI thinks of them',
+        shareTwitter: '𝕏 Share on Twitter', copyLink: '🔗 Copy Link', downloadImg: '📷 Download Card',
+        copied: '✓ Copied',
+        referralTitle: 'What type are your friends?', referralDesc: 'Send them the link and see what AI says about their tweets',
+        retryBtn: 'Try Another Account', fullTest: 'Take the Full SBTI Quiz →',
+        yourType: 'Your SBTI Personality', fallback: 'System Fallback',
+        matchTpl: 'Match {s}% · {e}/15 dimensions exact', fallbackBadge: 'Best match only {s}%',
+        fallbackSub: 'The personality database gave up on your brain.',
+        shareTpl: 'My SBTI personality is {code} ({cn})! AI read 20 of my tweets and saw right through me 😂 Try yours →',
+        referralTpl: 'Your friend got {code} ({cn}) — see what AI says about your tweets',
+        errorTpl: 'Analysis failed: {msg}', noTweets: 'Could not fetch tweets. The account may be private or have no tweets.',
+        cardFooter: 'What do your tweets reveal? → sbti.sider.ai', webShareMore: '📲 More sharing options',
+      },
+      ja: {
+        badge: 'SBTI AI 性格診断',
+        heroTitle: 'AIがあなたのツイートを読み<br/>魂を暴く',
+        heroSub: 'SBTIフレームワーク 15次元 · 5モデル · 27タイプ<br/>20ツイートであなたを見透かす',
+        inputPlaceholder: 'Twitterユーザー名を入力（例：elonmusk）',
+        startBtn: '分析開始',
+        feat1Title: 'AIディープリーディング', feat1Desc: 'テストではなく、AIがあなたの発言を直接読んで人格を分析',
+        feat2Title: '15次元分析', feat2Desc: '自己・感情・態度・行動・社交の5モデルで全方位スキャン',
+        feat3Title: 'ワンクリック共有', feat3Desc: '専用カードを生成してTwitterで友達にもシェア',
+        installTitle: '🔌 Siderブラウザ拡張機能が必要です',
+        installDesc: 'Siderが安全に公開ツイートを読み取ります。データは保存されません',
+        installStep1: '下のボタンでSiderをインストール', installStep1Sub: 'Chrome / Edge対応',
+        installStep2: 'インストール後にこのページに戻る', installStep2Sub: '自動検出して分析を続行します',
+        installBtn: '📥 Sider拡張機能をインストール',
+        checking: '拡張機能を検出中...',
+        checkingFound: 'Siderを検出しました！分析を開始...',
+        backHome: 'ホームに戻る',
+        analyzing: '分析中...',
+        loadStep1: 'Twitterプロフィールを開いています...', loadStep2: '最新20ツイートを読み取り中...',
+        loadStep3: 'AIがあなたの魂を審判中...', loadStep4: '27の性格タイプとマッチング中...',
+        sectionAnalysis: 'AIパーソナライズ分析', sectionEvidence: 'あなたを暴いたツイート',
+        sectionDims: '15次元スコア', sectionNote: '免責事項',
+        noteText: '本テストはAIによる公開ツイート分析に基づくエンターテインメントです。診断・採用・恋愛・占いなどの判断に使用しないでください。',
+        sectionShare: '結果をシェア', shareDesc: '友達にもAIの評価を見せよう',
+        shareTwitter: '𝕏 Twitterでシェア', copyLink: '🔗 リンクをコピー', downloadImg: '📷 カードをダウンロード',
+        copied: '✓ コピーしました',
+        referralTitle: '友達はどんなタイプ？', referralDesc: 'リンクを送って、AIが彼らのツイートをどう評価するか見てみよう',
+        retryBtn: '別のアカウントで分析', fullTest: '完全版SBTIテストを受ける →',
+        yourType: 'あなたのSBTI性格', fallback: 'システムフォールバック',
+        matchTpl: '一致度 {s}% · {e}/15 次元一致', fallbackBadge: '最高一致度わずか {s}%',
+        fallbackSub: '性格データベースがあなたの脳にギブアップしました。',
+        shareTpl: '私のSBTI性格は{code}（{cn}）！AIが20ツイート読んで見透かされた 😂 あなたも試してみて →',
+        referralTpl: '友達が{code}（{cn}）と診断された — あなたのツイートでAIは何と言う？',
+        errorTpl: '分析失敗：{msg}', noTweets: 'ツイートを取得できませんでした。非公開アカウントかツイートがない可能性があります。',
+        cardFooter: 'あなたのツイートは何を暴く？→ sbti.sider.ai', webShareMore: '📲 その他の共有方法',
+      },
+      ko: {
+        badge: 'SBTI AI 성격 분석',
+        heroTitle: 'AI가 당신의 트윗을 읽고<br/>영혼을 폭로합니다',
+        heroSub: 'SBTI 프레임워크 15차원 · 5모델 · 27유형<br/>트윗 20개면 충분합니다',
+        inputPlaceholder: 'Twitter 사용자명 입력 (예: elonmusk)',
+        startBtn: '분석 시작',
+        feat1Title: 'AI 심층 분석', feat1Desc: '퀴즈가 아닌, AI가 직접 당신의 말을 읽고 성격을 분석합니다',
+        feat2Title: '15차원 분석', feat2Desc: '자아, 감정, 태도, 행동, 사회성 5대 모델 전방위 스캔',
+        feat3Title: '원클릭 공유', feat3Desc: '전용 성격 카드를 생성하고 Twitter에서 친구들과 공유',
+        installTitle: '🔌 Sider 브라우저 확장 프로그램 필요',
+        installDesc: 'Sider가 안전하게 공개 트윗을 읽습니다. 데이터는 저장되지 않습니다',
+        installStep1: '아래 버튼을 클릭하여 Sider 설치', installStep1Sub: 'Chrome / Edge 지원',
+        installStep2: '설치 후 이 페이지로 돌아오기', installStep2Sub: '자동 감지하여 분석을 계속합니다',
+        installBtn: '📥 Sider 확장 프로그램 설치',
+        checking: '확장 프로그램 감지 중...',
+        checkingFound: 'Sider 감지됨! 분석 시작...',
+        backHome: '홈으로 돌아가기',
+        analyzing: '분석 중...',
+        loadStep1: 'Twitter 프로필 열는 중...', loadStep2: '최근 20개 트윗 읽는 중...',
+        loadStep3: 'AI가 당신의 영혼을 심판 중...', loadStep4: '27가지 성격 유형 매칭 중...',
+        sectionAnalysis: 'AI 맞춤 분석', sectionEvidence: '당신을 폭로한 트윗',
+        sectionDims: '15차원 점수', sectionNote: '면책 조항',
+        noteText: '이 테스트는 공개 트윗의 AI 분석을 기반으로 한 오락용입니다. 진단, 채용, 연애, 점술 등에 사용하지 마세요.',
+        sectionShare: '결과 공유', shareDesc: '친구들에게도 AI의 평가를 보여주세요',
+        shareTwitter: '𝕏 Twitter에 공유', copyLink: '🔗 링크 복사', downloadImg: '📷 카드 다운로드',
+        copied: '✓ 복사됨',
+        referralTitle: '친구들은 어떤 유형일까?', referralDesc: '링크를 보내서 AI가 그들의 트윗을 어떻게 평가하는지 확인하세요',
+        retryBtn: '다른 계정으로 분석', fullTest: '전체 SBTI 퀴즈 하기 →',
+        yourType: '당신의 SBTI 성격', fallback: '시스템 폴백',
+        matchTpl: '일치도 {s}% · {e}/15 차원 일치', fallbackBadge: '최고 일치도 {s}%뿐',
+        fallbackSub: '성격 데이터베이스가 당신의 뇌에 항복했습니다.',
+        shareTpl: '내 SBTI 성격은 {code}({cn})! AI가 내 트윗 20개를 읽고 꿰뚫어봤다 😂 너도 해봐 →',
+        referralTpl: '친구가 {code}({cn})로 나왔어 — AI가 너의 트윗은 뭐라고 할까?',
+        errorTpl: '분석 실패: {msg}', noTweets: '트윗을 가져올 수 없습니다. 비공개 계정이거나 트윗이 없을 수 있습니다.',
+        cardFooter: '당신의 트윗은 무엇을 드러낼까? → sbti.sider.ai', webShareMore: '📲 더 많은 공유 방법',
+      },
+      de: {
+        badge: 'SBTI AI Persönlichkeitstest',
+        heroTitle: 'Lass KI deine Tweets lesen<br/>und deine Seele entblößen',
+        heroSub: 'SBTI-Framework · 15 Dimensionen · 5 Modelle · 27 Typen<br/>20 Tweets reichen, um dich zu durchschauen',
+        inputPlaceholder: 'Twitter-Benutzername eingeben, z.B. elonmusk',
+        startBtn: 'Analyse starten',
+        feat1Title: 'KI-Tiefenanalyse', feat1Desc: 'Kein Quiz — KI liest direkt deine Worte und analysiert deine Persönlichkeit',
+        feat2Title: '15 Dimensionen', feat2Desc: 'Selbst, Emotion, Haltung, Aktion, Soziales — Vollspektrum-Scan',
+        feat3Title: 'Ein-Klick-Teilen', feat3Desc: 'Erstelle eine Persönlichkeitskarte und teile sie auf Twitter',
+        installTitle: '🔌 Sider Browser-Erweiterung erforderlich',
+        installDesc: 'Sider liest öffentliche Tweets sicher — keine Daten werden gespeichert',
+        installStep1: 'Klicke unten, um Sider zu installieren', installStep1Sub: 'Funktioniert mit Chrome / Edge',
+        installStep2: 'Komm nach der Installation zurück', installStep2Sub: 'Automatische Erkennung und Fortsetzung',
+        installBtn: '📥 Sider-Erweiterung installieren',
+        checking: 'Erweiterung wird erkannt...',
+        checkingFound: 'Sider erkannt! Analyse startet...',
+        backHome: 'Zurück zur Startseite',
+        analyzing: 'Analyse läuft...',
+        loadStep1: 'Twitter-Profil wird geöffnet...', loadStep2: 'Lese die letzten 20 Tweets...',
+        loadStep3: 'KI beurteilt deine Seele...', loadStep4: 'Abgleich mit 27 Persönlichkeitstypen...',
+        sectionAnalysis: 'KI-Personalisierte Analyse', sectionEvidence: 'Tweets, die dich entlarvt haben',
+        sectionDims: '15-Dimensionen-Bewertung', sectionNote: 'Haftungsausschluss',
+        noteText: 'Dieser Test basiert auf KI-Analyse öffentlicher Tweets und dient nur zur Unterhaltung. Nicht für Diagnosen, Bewerbungen, Dating oder Lebensentscheidungen verwenden.',
+        sectionShare: 'Ergebnis teilen', shareDesc: 'Zeig deinen Freunden, was die KI über sie denkt',
+        shareTwitter: '𝕏 Auf Twitter teilen', copyLink: '🔗 Link kopieren', downloadImg: '📷 Karte herunterladen',
+        copied: '✓ Kopiert',
+        referralTitle: 'Welcher Typ sind deine Freunde?', referralDesc: 'Schick ihnen den Link und sieh, was die KI über ihre Tweets sagt',
+        retryBtn: 'Anderes Konto analysieren', fullTest: 'Vollständigen SBTI-Test machen →',
+        yourType: 'Dein SBTI-Persönlichkeitstyp', fallback: 'System-Fallback',
+        matchTpl: 'Übereinstimmung {s}% · {e}/15 Dimensionen exakt', fallbackBadge: 'Beste Übereinstimmung nur {s}%',
+        fallbackSub: 'Die Persönlichkeitsdatenbank hat bei deinem Gehirn aufgegeben.',
+        shareTpl: 'Mein SBTI-Typ ist {code} ({cn})! KI hat 20 meiner Tweets gelesen und mich durchschaut 😂 Probier deinen →',
+        referralTpl: 'Dein Freund hat {code} ({cn}) bekommen — was sagt die KI über deine Tweets?',
+        errorTpl: 'Analyse fehlgeschlagen: {msg}', noTweets: 'Tweets konnten nicht abgerufen werden. Das Konto ist möglicherweise privat.',
+        cardFooter: 'Was verraten deine Tweets? → sbti.sider.ai', webShareMore: '📲 Weitere Optionen',
+      },
+      es: {
+        badge: 'SBTI AI Test de Personalidad',
+        heroTitle: 'Deja que la IA lea tus tweets<br/>y exponga tu alma',
+        heroSub: 'Marco SBTI · 15 Dimensiones · 5 Modelos · 27 Tipos<br/>20 tweets son suficientes para leerte',
+        inputPlaceholder: 'Ingresa tu usuario de Twitter, ej. elonmusk',
+        startBtn: 'Iniciar Análisis',
+        feat1Title: 'Análisis profundo con IA', feat1Desc: 'Sin cuestionarios — la IA lee lo que has dicho para analizar tu personalidad',
+        feat2Title: '15 Dimensiones', feat2Desc: 'Yo, Emoción, Actitud, Acción, Social — escaneo de espectro completo',
+        feat3Title: 'Compartir con un clic', feat3Desc: 'Genera una tarjeta de personalidad y compártela en Twitter',
+        installTitle: '🔌 Se necesita la extensión Sider',
+        installDesc: 'Sider lee tus tweets públicos de forma segura — no se almacenan datos',
+        installStep1: 'Haz clic abajo para instalar Sider', installStep1Sub: 'Funciona en Chrome / Edge',
+        installStep2: 'Vuelve a esta página después de instalar', installStep2Sub: 'Detección automática y continuación',
+        installBtn: '📥 Instalar extensión Sider',
+        checking: 'Detectando extensión...',
+        checkingFound: '¡Sider detectado! Iniciando análisis...',
+        backHome: 'Volver al inicio',
+        analyzing: 'Analizando...',
+        loadStep1: 'Abriendo tu perfil de Twitter...', loadStep2: 'Leyendo tus últimos 20 tweets...',
+        loadStep3: 'La IA está juzgando tu alma...', loadStep4: 'Comparando con 27 tipos de personalidad...',
+        sectionAnalysis: 'Análisis personalizado de IA', sectionEvidence: 'Tweets que te delataron',
+        sectionDims: 'Puntuación de 15 dimensiones', sectionNote: 'Aviso',
+        noteText: 'Este test se basa en el análisis de IA de tweets públicos, solo para entretenimiento. No lo uses para diagnósticos, entrevistas, citas o decisiones de vida.',
+        sectionShare: 'Comparte tu resultado', shareDesc: 'Deja que tus amigos vean lo que la IA piensa de ellos',
+        shareTwitter: '𝕏 Compartir en Twitter', copyLink: '🔗 Copiar enlace', downloadImg: '📷 Descargar tarjeta',
+        copied: '✓ Copiado',
+        referralTitle: '¿Qué tipo son tus amigos?', referralDesc: 'Envíales el enlace y descubre qué dice la IA de sus tweets',
+        retryBtn: 'Analizar otra cuenta', fullTest: 'Hacer el test SBTI completo →',
+        yourType: 'Tu personalidad SBTI', fallback: 'Respaldo del sistema',
+        matchTpl: 'Coincidencia {s}% · {e}/15 dimensiones exactas', fallbackBadge: 'Mejor coincidencia solo {s}%',
+        fallbackSub: 'La base de datos de personalidad se rindió con tu cerebro.',
+        shareTpl: 'Mi personalidad SBTI es {code} ({cn}). ¡La IA leyó 20 de mis tweets y me descifró! 😂 Prueba el tuyo →',
+        referralTpl: 'Tu amigo obtuvo {code} ({cn}) — ¿qué dirá la IA de tus tweets?',
+        errorTpl: 'Análisis fallido: {msg}', noTweets: 'No se pudieron obtener tweets. La cuenta puede ser privada o no tener tweets.',
+        cardFooter: '¿Qué revelan tus tweets? → sbti.sider.ai', webShareMore: '📲 Más opciones para compartir',
+      },
+      fr: {
+        badge: 'SBTI AI Test de Personnalité',
+        heroTitle: "Laissez l'IA lire vos tweets<br/>et exposer votre âme",
+        heroSub: 'Cadre SBTI · 15 Dimensions · 5 Modèles · 27 Types<br/>20 tweets suffisent pour vous percer à jour',
+        inputPlaceholder: 'Entrez votre nom Twitter, ex. elonmusk',
+        startBtn: 'Lancer l\'analyse',
+        feat1Title: 'Analyse IA approfondie', feat1Desc: 'Pas de quiz — l\'IA lit directement vos paroles pour analyser votre personnalité',
+        feat2Title: '15 Dimensions', feat2Desc: 'Soi, Émotion, Attitude, Action, Social — scan complet',
+        feat3Title: 'Partage en un clic', feat3Desc: 'Générez une carte de personnalité et partagez-la sur Twitter',
+        installTitle: '🔌 Extension Sider requise',
+        installDesc: 'Sider lit vos tweets publics en toute sécurité — aucune donnée stockée',
+        installStep1: 'Cliquez ci-dessous pour installer Sider', installStep1Sub: 'Compatible Chrome / Edge',
+        installStep2: 'Revenez sur cette page après l\'installation', installStep2Sub: 'Détection automatique et continuation',
+        installBtn: '📥 Installer l\'extension Sider',
+        checking: 'Détection de l\'extension...',
+        checkingFound: 'Sider détecté ! Début de l\'analyse...',
+        backHome: 'Retour à l\'accueil',
+        analyzing: 'Analyse en cours...',
+        loadStep1: 'Ouverture de votre profil Twitter...', loadStep2: 'Lecture de vos 20 derniers tweets...',
+        loadStep3: 'L\'IA juge votre âme...', loadStep4: 'Correspondance avec 27 types de personnalité...',
+        sectionAnalysis: 'Analyse IA personnalisée', sectionEvidence: 'Les tweets qui vous ont trahi',
+        sectionDims: 'Scores sur 15 dimensions', sectionNote: 'Avertissement',
+        noteText: 'Ce test est basé sur l\'analyse IA de tweets publics, à des fins de divertissement uniquement. Ne l\'utilisez pas pour des diagnostics, entretiens, rencontres ou décisions de vie.',
+        sectionShare: 'Partagez votre résultat', shareDesc: 'Montrez à vos amis ce que l\'IA pense d\'eux',
+        shareTwitter: '𝕏 Partager sur Twitter', copyLink: '🔗 Copier le lien', downloadImg: '📷 Télécharger la carte',
+        copied: '✓ Copié',
+        referralTitle: 'Quel type sont vos amis ?', referralDesc: 'Envoyez-leur le lien et voyez ce que l\'IA dit de leurs tweets',
+        retryBtn: 'Analyser un autre compte', fullTest: 'Faire le test SBTI complet →',
+        yourType: 'Votre personnalité SBTI', fallback: 'Repli système',
+        matchTpl: 'Correspondance {s}% · {e}/15 dimensions exactes', fallbackBadge: 'Meilleure correspondance seulement {s}%',
+        fallbackSub: 'La base de données de personnalité a capitulé face à votre cerveau.',
+        shareTpl: 'Ma personnalité SBTI est {code} ({cn}) ! L\'IA a lu 20 de mes tweets et m\'a percé à jour 😂 Essayez →',
+        referralTpl: 'Votre ami a obtenu {code} ({cn}) — que dira l\'IA de vos tweets ?',
+        errorTpl: 'Échec de l\'analyse : {msg}', noTweets: 'Impossible de récupérer les tweets. Le compte est peut-être privé.',
+        cardFooter: 'Que révèlent vos tweets ? → sbti.sider.ai', webShareMore: '📲 Plus d\'options de partage',
+      },
+      tr: {
+        badge: 'SBTI AI Kişilik Testi',
+        heroTitle: "AI'ın tweetlerini okumasına<br/>ve ruhunu ifşa etmesine izin ver",
+        heroSub: 'SBTI Çerçevesi · 15 Boyut · 5 Model · 27 Tip<br/>Seni görmek için 20 tweet yeterli',
+        inputPlaceholder: 'Twitter kullanıcı adınızı girin, ör. elonmusk',
+        startBtn: 'Analizi Başlat',
+        feat1Title: 'AI Derin Analiz', feat1Desc: 'Test yok — AI söylediklerini okuyarak kişiliğini analiz eder',
+        feat2Title: '15 Boyut Analizi', feat2Desc: 'Benlik, Duygu, Tutum, Eylem, Sosyal — tam spektrum tarama',
+        feat3Title: 'Tek Tıkla Paylaş', feat3Desc: 'Kişilik kartı oluştur ve Twitter\'da arkadaşlarınla paylaş',
+        installTitle: '🔌 Sider Tarayıcı Uzantısı Gerekli',
+        installDesc: 'Sider herkese açık tweetleri güvenle okur — hiçbir veri saklanmaz',
+        installStep1: 'Sider\'ı yüklemek için aşağıya tıklayın', installStep1Sub: 'Chrome / Edge\'de çalışır',
+        installStep2: 'Yükledikten sonra bu sayfaya dönün', installStep2Sub: 'Otomatik algılama ve devam etme',
+        installBtn: '📥 Sider Uzantısını Yükle',
+        checking: 'Uzantı kontrol ediliyor...',
+        checkingFound: 'Sider algılandı! Analiz başlıyor...',
+        backHome: 'Ana Sayfaya Dön',
+        analyzing: 'Analiz ediliyor...',
+        loadStep1: 'Twitter profiliniz açılıyor...', loadStep2: 'Son 20 tweetiniz okunuyor...',
+        loadStep3: 'AI ruhunuzu yargılıyor...', loadStep4: '27 kişilik tipiyle eşleştiriliyor...',
+        sectionAnalysis: 'AI Kişiselleştirilmiş Analiz', sectionEvidence: 'Seni Ele Veren Tweetler',
+        sectionDims: '15 Boyut Puanları', sectionNote: 'Sorumluluk Reddi',
+        noteText: 'Bu test, yalnızca eğlence amaçlı herkese açık tweetlerin AI analizine dayanmaktadır. Teşhis, iş görüşmesi, flört veya yaşam kararları için kullanmayın.',
+        sectionShare: 'Sonucunu Paylaş', shareDesc: 'Arkadaşlarının da AI\'ın onlar hakkında ne düşündüğünü görmesini sağla',
+        shareTwitter: '𝕏 Twitter\'da Paylaş', copyLink: '🔗 Bağlantıyı Kopyala', downloadImg: '📷 Kartı İndir',
+        copied: '✓ Kopyalandı',
+        referralTitle: 'Arkadaşların hangi tip?', referralDesc: 'Linki gönder ve AI\'ın onların tweetleri hakkında ne söylediğini gör',
+        retryBtn: 'Başka Hesap Analiz Et', fullTest: 'Tam SBTI Testini Yap →',
+        yourType: 'Senin SBTI Kişiliğin', fallback: 'Sistem Yedek',
+        matchTpl: 'Eşleşme {s}% · {e}/15 boyut tam eşleşme', fallbackBadge: 'En iyi eşleşme sadece {s}%',
+        fallbackSub: 'Kişilik veritabanı beynine pes etti.',
+        shareTpl: 'SBTI kişiliğim {code} ({cn})! AI 20 tweetimi okuyup beni gördü 😂 Sen de dene →',
+        referralTpl: 'Arkadaşın {code} ({cn}) çıktı — AI senin tweetlerin hakkında ne der?',
+        errorTpl: 'Analiz başarısız: {msg}', noTweets: 'Tweetler alınamadı. Hesap gizli olabilir veya tweet olmayabilir.',
+        cardFooter: 'Tweetlerin neyi ifşa ediyor? → sbti.sider.ai', webShareMore: '📲 Daha fazla paylaşım seçeneği',
+      },
+    };
+
+    let currentLang = localStorage.getItem('sbti-lang') || 'en';
+    if (!(currentLang in I18N)) currentLang = 'en';
+
+    function t(key, vars) {
+      let s = I18N[currentLang]?.[key] || I18N['en'][key] || key;
+      if (vars) Object.entries(vars).forEach(([k, v]) => { s = s.replace(new RegExp(`\\{${k}\\}`, 'g'), v); });
+      return s;
+    }
+
+    function applyI18n() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.innerHTML = t(key);
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.getAttribute('data-i18n-placeholder'));
+      });
+      document.getElementById('langLabel').textContent = LANGS[currentLang];
+      document.documentElement.lang = currentLang;
+    }
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('sbti-lang', lang);
+      applyI18n();
+      // Re-render result if visible
+      if (currentResult) renderResult(currentResult);
+    }
+
+    // Build language dropdown
+    (function initLangSwitcher() {
+      const dropdown = document.getElementById('langDropdown');
+      const btn = document.getElementById('langBtn');
+      Object.entries(LANGS).forEach(([code, label]) => {
+        const opt = document.createElement('button');
+        opt.className = 'lang-option';
+        opt.textContent = label;
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          setLang(code);
+          dropdown.classList.remove('open');
+          dropdown.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.textContent === label));
+        });
+        if (code === currentLang) opt.classList.add('active');
+        dropdown.appendChild(opt);
+      });
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', () => dropdown.classList.remove('open'));
+      applyI18n();
+    })();
+
+    // =============================================
+    //  SBTI DATA (ported from SBTI-test/index.html)
+    // =============================================
+    const dimensionMeta = {
+      S1: { name: 'S1 自尊自信', model: '自我模型' },
+      S2: { name: 'S2 自我清晰度', model: '自我模型' },
+      S3: { name: 'S3 核心价值', model: '自我模型' },
+      E1: { name: 'E1 依恋安全感', model: '情感模型' },
+      E2: { name: 'E2 情感投入度', model: '情感模型' },
+      E3: { name: 'E3 边界与依赖', model: '情感模型' },
+      A1: { name: 'A1 世界观倾向', model: '态度模型' },
+      A2: { name: 'A2 规则与灵活度', model: '态度模型' },
+      A3: { name: 'A3 人生意义感', model: '态度模型' },
+      Ac1: { name: 'Ac1 动机导向', model: '行动驱力模型' },
+      Ac2: { name: 'Ac2 决策风格', model: '行动驱力模型' },
+      Ac3: { name: 'Ac3 执行模式', model: '行动驱力模型' },
+      So1: { name: 'So1 社交主动性', model: '社交模型' },
+      So2: { name: 'So2 人际边界感', model: '社交模型' },
+      So3: { name: 'So3 表达与真实度', model: '社交模型' }
+    };
+
+    const dimensionOrder = ['S1','S2','S3','E1','E2','E3','A1','A2','A3','Ac1','Ac2','Ac3','So1','So2','So3'];
+
+    const DIM_EXPLANATIONS = {
+      S1: { L: "对自己下手比别人还狠，夸你两句你都想先验明真伪。", M: "自信值随天气波动，顺风能飞，逆风先缩。", H: "心里对自己大致有数，不太会被路人一句话打散。" },
+      S2: { L: "内心频道雪花较多，常在「我是谁」里循环缓存。", M: "平时还能认出自己，偶尔也会被情绪临时换号。", H: "对自己的脾气、欲望和底线都算门儿清。" },
+      S3: { L: "更在意舒服和安全，没必要天天给人生开冲刺模式。", M: "想上进，也想躺会儿，价值排序经常内部开会。", H: "很容易被目标、成长或某种重要信念推着往前。" },
+      E1: { L: "感情里警报器灵敏，已读不回都能脑补到大结局。", M: "一半信任，一半试探，感情里常在心里拉锯。", H: "更愿意相信关系本身，不会被一点风吹草动吓散。" },
+      E2: { L: "感情投入偏克制，心门不是没开，是门禁太严。", M: "会投入，但会给自己留后手，不至于全盘梭哈。", H: "一旦认定就容易认真，情绪和精力都给得很足。" },
+      E3: { L: "容易黏人也容易被黏，关系里的温度感很重要。", M: "亲密和独立都要一点，属于可调节型依赖。", H: "空间感很重要，再爱也得留一块属于自己的地。" },
+      A1: { L: "看世界自带防御滤镜，先怀疑，再靠近。", M: "既不天真也不彻底阴谋论，观望是你的本能。", H: "更愿意相信人性和善意，遇事不急着把世界判死刑。" },
+      A2: { L: "规则能绕就绕，舒服和自由往往排在前面。", M: "该守的时候守，该变通的时候也不死磕。", H: "秩序感较强，能按流程来就不爱即兴炸场。" },
+      A3: { L: "意义感偏低，容易觉得很多事都像在走过场。", M: "偶尔有目标，偶尔也想摆烂，人生观处于半开机。", H: "做事更有方向，知道自己大概要往哪边走。" },
+      Ac1: { L: "做事先考虑别翻车，避险系统比野心更先启动。", M: "有时想赢，有时只想别麻烦，动机比较混合。", H: "更容易被成果、成长和推进感点燃。" },
+      Ac2: { L: "做决定前容易多转几圈，脑内会议常常超时。", M: "会想，但不至于想死机，属于正常犹豫。", H: "拍板速度快，决定一下就不爱回头磨叽。" },
+      Ac3: { L: "执行力和死线有深厚感情，越晚越像要觉醒。", M: "能做，但状态看时机，偶尔稳偶尔摆。", H: "推进欲比较强，事情不落地心里都像卡了根刺。" },
+      So1: { L: "社交启动慢热，主动出击这事通常得攒半天气。", M: "有人来就接，没人来也不硬凑，社交弹性一般。", H: "更愿意主动打开场子，在人群里不太怕露头。" },
+      So2: { L: "关系里更想亲近和融合，熟了就容易把人划进内圈。", M: "既想亲近又想留缝，边界感看对象调节。", H: "边界感偏强，靠太近会先本能性后退半步。" },
+      So3: { L: "表达更直接，心里有啥基本不爱绕。", M: "会看气氛说话，真实和体面通常各留一点。", H: "对不同场景的自我切换更熟练，真实感会分层发放。" }
+    };
+
+    const TYPE_LIBRARY = {
+      "CTRL": { code: "CTRL", cn: "拿捏者", intro: "怎么样，被我拿捏了吧？", desc: "恭喜您，您测出了全中国最为罕见的人格，您是宇宙熵增定律的天然反抗者！" },
+      "ATM-er": { code: "ATM-er", cn: "送钱者", intro: "你以为我很有钱吗？", desc: "恭喜您，您竟然测出了这个世界上最稀有的人格。" },
+      "Dior-s": { code: "Dior-s", cn: "屌丝", intro: "等着我屌丝逆袭。", desc: "恭喜！您并非屌丝，您是犬儒主义先贤第欧根尼失散多年的精神传人。" },
+      "BOSS": { code: "BOSS", cn: "领导者", intro: "方向盘给我，我来开。", desc: "BOSS是一个手里永远拿着方向盘的人。" },
+      "THAN-K": { code: "THAN-K", cn: "感恩者", intro: "我感谢苍天！我感谢大地！", desc: "恭喜您，您测出了全中国最为罕见的人格。" },
+      "OH-NO": { code: "OH-NO", cn: "哦不人", intro: "哦不！我怎么会是这个人格？！", desc: "「哦不！」并非恐惧的尖叫，而是一种顶级的智慧。" },
+      "GOGO": { code: "GOGO", cn: "行者", intro: "gogogo~出发咯", desc: "经研究发现，GOGO人格的大脑构造与常人有根本性不同。" },
+      "SEXY": { code: "SEXY", cn: "尤物", intro: "您就是天生的尤物！", desc: "当您走进一个房间，照明系统会自动将您识别为天生的尤物。" },
+      "LOVE-R": { code: "LOVE-R", cn: "多情者", intro: "爱意太满，现实显得有点贫瘠。", desc: "LOVE-R人格像远古神话时代幸存至今的珍稀物种。" },
+      "MUM": { code: "MUM", cn: "妈妈", intro: "或许...我可以叫你妈妈吗....?", desc: "恭喜您，您测出了全中国最稀有的妈妈人格。" },
+      "FAKE": { code: "FAKE", cn: "伪人", intro: "已经，没有人类了。", desc: "SCP基金会紧急报告：项目编号 SCP-CN-████「伪人」。" },
+      "OJBK": { code: "OJBK", cn: "无所谓人", intro: "我说随便，是真的随便。", desc: "让我们直面这个词的粗犷本质：OJBK。" },
+      "MALO": { code: "MALO", cn: "吗喽", intro: "人生是个副本，而我只是一只吗喽。", desc: "朋友，你不是「童心未泯」，你压根就没进化。" },
+      "JOKE-R": { code: "JOKE-R", cn: "小丑", intro: "原来我们都是小丑。", desc: "请注意，JOKE-R人格不是一个「人」，更像一个把笑话穿在身上的小丑。" },
+      "WOC!": { code: "WOC!", cn: "握草人", intro: "卧槽，我怎么是这个人格？", desc: "我们发现了一种神奇的生物——WOC!人。" },
+      "THIN-K": { code: "THIN-K", cn: "思考者", intro: "已深度思考100s。", desc: "经研究发现，THIN-K人格的大脑构造与常人有根本性不同。" },
+      "SHIT": { code: "SHIT", cn: "愤世者", intro: "这个世界，构石一坨。", desc: "恭喜您，SHIT人格是宇宙中已知的唯一一种稀有人格。" },
+      "ZZZZ": { code: "ZZZZ", cn: "装死者", intro: "我没死，我只是在睡觉。", desc: "恭喜您，您测出了全中国最稀有的装死人格。" },
+      "POOR": { code: "POOR", cn: "贫困者", intro: "我穷，但我很专。", desc: "恭喜您，您测出了【POOR - 贫困者】。" },
+      "MONK": { code: "MONK", cn: "僧人", intro: "没有那种世俗的欲望。", desc: "当别人在KTV里参悟爱与恨的纠缠，MONK人格选择在家中参悟一份大道。" },
+      "IMSB": { code: "IMSB", cn: "傻者", intro: "认真的么？我真的是傻逼么？", desc: "恭喜您！您根本不在人类范畴内！" },
+      "SOLO": { code: "SOLO", cn: "孤儿", intro: "我哭了，我怎么会是孤儿？", desc: "恭喜您，您测出了全中国最稀有的【SOLO - 孤儿】人格。" },
+      "FUCK": { code: "FUCK", cn: "草者", intro: "操！这是什么人格？", desc: "恭喜您！您根本不在人类范畴内！" },
+      "DEAD": { code: "DEAD", cn: "死者", intro: "我，还活着吗？", desc: "恭喜您，您测出了全中国最为罕见的人格。" },
+      "IMFW": { code: "IMFW", cn: "废物", intro: "我真的...是废物吗？", desc: "恭喜您，您测出的不是一个普通人格。" },
+      "HHHH": { code: "HHHH", cn: "傻乐者", intro: "哈哈哈哈哈哈。", desc: "恭喜您！由于您的思维回路过于清奇，标准人格库已全面崩溃。" },
+      "DRUNK": { code: "DRUNK", cn: "酒鬼", intro: "烈酒烧喉，不得不醉。", desc: "您体内流淌的不是血液，是美味的五粮液！" }
+    };
+
+    const TYPE_IMAGES = {
+      "IMSB": "./image/IMSB.png", "BOSS": "./image/BOSS.png", "MUM": "./image/MUM.png",
+      "FAKE": "./image/FAKE.png", "Dior-s": "./image/Dior-s.jpg", "DEAD": "./image/DEAD.png",
+      "ZZZZ": "./image/ZZZZ.png", "GOGO": "./image/GOGO.png", "FUCK": "./image/FUCK.png",
+      "CTRL": "./image/CTRL.png", "HHHH": "./image/HHHH.png", "SEXY": "./image/SEXY.png",
+      "OJBK": "./image/OJBK.png", "JOKE-R": "./image/JOKE-R.jpg", "POOR": "./image/POOR.png",
+      "OH-NO": "./image/OH-NO.png", "MONK": "./image/MONK.png", "SHIT": "./image/SHIT.png",
+      "THAN-K": "./image/THAN-K.png", "MALO": "./image/MALO.png", "ATM-er": "./image/ATM-er.png",
+      "THIN-K": "./image/THIN-K.png", "SOLO": "./image/SOLO.png", "LOVE-R": "./image/LOVE-R.png",
+      "WOC!": "./image/WOC.png", "DRUNK": "./image/DRUNK.png", "IMFW": "./image/IMFW.png"
+    };
+
+    const NORMAL_TYPES = [
+      { code: "CTRL", pattern: "HHH-HMH-MHH-HHH-MHM" },
+      { code: "ATM-er", pattern: "HHH-HHM-HHH-HMH-MHL" },
+      { code: "Dior-s", pattern: "MHM-MMH-MHM-HMH-LHL" },
+      { code: "BOSS", pattern: "HHH-HMH-MMH-HHH-LHL" },
+      { code: "THAN-K", pattern: "MHM-HMM-HHM-MMH-MHL" },
+      { code: "OH-NO", pattern: "HHL-LMH-LHH-HHM-LHL" },
+      { code: "GOGO", pattern: "HHM-HMH-MMH-HHH-MHM" },
+      { code: "SEXY", pattern: "HMH-HHL-HMM-HMM-HLH" },
+      { code: "LOVE-R", pattern: "MLH-LHL-HLH-MLM-MLH" },
+      { code: "MUM", pattern: "MMH-MHL-HMM-LMM-HLL" },
+      { code: "FAKE", pattern: "HLM-MML-MLM-MLM-HLH" },
+      { code: "OJBK", pattern: "MMH-MMM-HML-LMM-MML" },
+      { code: "MALO", pattern: "MLH-MHM-MLH-MLH-LMH" },
+      { code: "JOKE-R", pattern: "LLH-LHL-LML-LLL-MLM" },
+      { code: "WOC!", pattern: "HHL-HMH-MMH-HHM-LHH" },
+      { code: "THIN-K", pattern: "HHL-HMH-MLH-MHM-LHH" },
+      { code: "SHIT", pattern: "HHL-HLH-LMM-HHM-LHH" },
+      { code: "ZZZZ", pattern: "MHL-MLH-LML-MML-LHM" },
+      { code: "POOR", pattern: "HHL-MLH-LMH-HHH-LHL" },
+      { code: "MONK", pattern: "HHL-LLH-LLM-MML-LHM" },
+      { code: "IMSB", pattern: "LLM-LMM-LLL-LLL-MLM" },
+      { code: "SOLO", pattern: "LML-LLH-LHL-LML-LHM" },
+      { code: "FUCK", pattern: "MLL-LHL-LLM-MLL-HLH" },
+      { code: "DEAD", pattern: "LLL-LLM-LML-LLL-LHM" },
+      { code: "IMFW", pattern: "LLH-LHL-LML-LLL-MLL" }
+    ];
+
+    // =============================================
+    //  MATCHING ALGORITHM
+    // =============================================
+    function levelNum(l) { return { L: 1, M: 2, H: 3 }[l] || 2; }
+    function parsePattern(p) { return p.replace(/-/g, '').split(''); }
+
+    function matchType(dimensions) {
+      const userVector = dimensionOrder.map(d => levelNum(dimensions[d]));
+      const ranked = NORMAL_TYPES.map(type => {
+        const vector = parsePattern(type.pattern).map(levelNum);
+        let distance = 0, exact = 0;
+        for (let i = 0; i < vector.length; i++) {
+          const diff = Math.abs(userVector[i] - vector[i]);
+          distance += diff;
+          if (diff === 0) exact++;
+        }
+        const similarity = Math.max(0, Math.round((1 - distance / 30) * 100));
+        return { ...type, ...TYPE_LIBRARY[type.code], distance, exact, similarity };
+      }).sort((a, b) => {
+        if (a.distance !== b.distance) return a.distance - b.distance;
+        if (b.exact !== a.exact) return b.exact - a.exact;
+        return b.similarity - a.similarity;
+      });
+
+      const best = ranked[0];
+      if (best.similarity < 60) {
+        return {
+          finalType: TYPE_LIBRARY.HHHH,
+          kicker: t('fallback'),
+          badge: t('fallbackBadge', { s: best.similarity }),
+          sub: t('fallbackSub'),
+          similarity: best.similarity,
+          exact: best.exact
+        };
+      }
+      return {
+        finalType: best,
+        kicker: t('yourType'),
+        badge: t('matchTpl', { s: best.similarity, e: best.exact }),
+        sub: best.intro,
+        similarity: best.similarity,
+        exact: best.exact
+      };
+    }
+
+    // =============================================
+    //  APP STATE & NAVIGATION
+    // =============================================
+    let currentHandle = '';
+    let currentResult = null;
+
+    const screens = {
+      landing: document.getElementById('landing'),
+      install: document.getElementById('install'),
+      loading: document.getElementById('loading'),
+      result: document.getElementById('result')
+    };
+
+    function showScreen(name) {
+      Object.entries(screens).forEach(([k, el]) => el.classList.toggle('active', k === name));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Check referral from URL
+    (function checkReferral() {
+      const params = new URLSearchParams(location.search);
+      const refType = params.get('type');
+      if (refType && TYPE_LIBRARY[refType]) {
+        const tp = TYPE_LIBRARY[refType];
+        const teaser = document.getElementById('referralTeaser');
+        teaser.textContent = t('referralTpl', { code: tp.code, cn: tp.cn });
+        teaser.style.display = 'block';
+      }
+    })();
+
+    // =============================================
+    //  EXTENSION DETECTION
+    // =============================================
+    function isExtensionInstalled() {
+      return document.documentElement.dataset.extReady === 'true';
+    }
+
+    let installCheckInterval = null;
+    function startInstallCheck() {
+      const status = document.getElementById('checkingStatus');
+      installCheckInterval = setInterval(() => {
+        if (isExtensionInstalled()) {
+          clearInterval(installCheckInterval);
+          status.textContent = t('checkingFound');
+          status.className = 'checking-text found';
+          setTimeout(() => startAnalysis(), 800);
+        }
+      }, 1500);
+    }
+
+    // =============================================
+    //  EXTENSION COMMUNICATION
+    // =============================================
+    function sendToExtension(type, data) {
+      return new Promise((resolve, reject) => {
+        const timeout = setTimeout(() => {
+          window.removeEventListener('web-response', handler);
+          reject(new Error('Extension response timeout'));
+        }, 60000); // 60s timeout for scraping
+
+        function handler(e) {
+          if (e.detail && e.detail.type === type) {
+            clearTimeout(timeout);
+            window.removeEventListener('web-response', handler);
+            resolve(e.detail.data);
+          }
+        }
+        window.addEventListener('web-response', handler);
+        window.dispatchEvent(new CustomEvent('web-request', {
+          detail: { type, data }
+        }));
+      });
+    }
+
+    // =============================================
+    //  ANALYSIS FLOW
+    // =============================================
+    function setStep(stepNum) {
+      for (let i = 1; i <= 4; i++) {
+        const el = document.getElementById('step' + i);
+        el.className = 'loading-step' + (i < stepNum ? ' done' : i === stepNum ? ' active' : '');
+      }
+    }
+
+    async function startAnalysis() {
+      showScreen('loading');
+      const errorBox = document.getElementById('loadingError');
+      errorBox.style.display = 'none';
+
+      try {
+        // Step 1: Trigger extension to open Twitter
+        setStep(1);
+        const scrapeResult = await sendToExtension('sbti-scrape-tweets', { handle: currentHandle });
+
+        if (scrapeResult?.error) {
+          throw new Error(scrapeResult.error);
+        }
+
+        const tweets = scrapeResult?.tweets || [];
+        if (tweets.length === 0) {
+          throw new Error(t('noTweets'));
+        }
+
+        // Step 2: Tweets received
+        setStep(2);
+        await sleep(500);
+
+        // Step 3: AI Analysis
+        setStep(3);
+        const aiResult = await analyzeWithAI(tweets);
+
+        // Step 4: Match personality
+        setStep(4);
+        await sleep(500);
+
+        const typeResult = matchType(aiResult.dimensions);
+        currentResult = {
+          ...typeResult,
+          analysis: aiResult.analysis,
+          evidence: aiResult.evidence,
+          dimensions: aiResult.dimensions,
+          handle: currentHandle,
+          tweets
+        };
+
+        renderResult(currentResult);
+        showScreen('result');
+
+      } catch (err) {
+        errorBox.textContent = t('errorTpl', { msg: err.message });
+        errorBox.style.display = 'block';
+      }
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+    // =============================================
+    //  AI ANALYSIS (calls backend API)
+    // =============================================
+    async function analyzeWithAI(tweets) {
+      // TODO: Replace with actual backend API endpoint
+      // For now, use a mock/placeholder that the user will replace with their Sider LLM service
+      const API_URL = '/api/analyze';
+
+      try {
+        const resp = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ tweets, handle: currentHandle, lang: currentLang })
+        });
+
+        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
+        return await resp.json();
+      } catch (e) {
+        // Fallback: if API is not available, do client-side mock analysis
+        console.warn('API not available, using fallback analysis:', e);
+        return fallbackAnalysis(tweets);
+      }
+    }
+
+    // Fallback: simple heuristic-based analysis when API is unavailable
+    function fallbackAnalysis(tweets) {
+      const allText = tweets.join(' ').toLowerCase();
+      const len = allText.length;
+
+      function score(positiveWords, negativeWords) {
+        let p = 0, n = 0;
+        positiveWords.forEach(w => { if (allText.includes(w)) p++; });
+        negativeWords.forEach(w => { if (allText.includes(w)) n++; });
+        if (p > n + 1) return 'H';
+        if (n > p + 1) return 'L';
+        return 'M';
+      }
+
+      const dimensions = {
+        S1: score(['proud','confident','achieve','great','best','win'], ['fail','suck','worst','ugly','loser','insecure']),
+        S2: score(['i know','i am','my goal','purpose','identity'], ['confused','lost','who am i','uncertain','idk']),
+        S3: score(['growth','improve','ambition','hustle','grind'], ['chill','relax','whatever','lazy','comfort']),
+        E1: score(['trust','love','together','partner','grateful'], ['betray','suspicious','alone','abandon','ghost']),
+        E2: score(['love you','forever','soulmate','heart','care'], ['detach','independent','distance','guard','wall']),
+        E3: score(['space','freedom','alone time','boundary','independent'], ['miss you','together','need you','clingy','close']),
+        A1: score(['hope','good','kind','humanity','beautiful'], ['hate','evil','scam','corrupt','cynical','fake']),
+        A2: score(['plan','schedule','rule','order','discipline'], ['rebel','break','freedom','chaos','yolo']),
+        A3: score(['mission','purpose','meaning','goal','why'], ['pointless','nihil','meaningless','whatever','void']),
+        Ac1: score(['achieve','build','create','ship','launch'], ['risk','careful','avoid','safe','wait']),
+        Ac2: score(['decided','done','let\'s go','commit','now'], ['maybe','idk','thinking','unsure','hmm']),
+        Ac3: score(['shipped','done','finished','completed','built'], ['deadline','later','procrastinat','tomorrow','soon']),
+        So1: score(['meet','event','party','connect','dm me'], ['introvert','alone','quiet','hermit','cancel']),
+        So2: score(['boundary','space','respect','limit','privacy'], ['close','family','tribe','bestie','squad']),
+        So3: score(['honestly','real talk','unpopular opinion','truth'], ['depends','context','persona','different','adapt'])
+      };
+
+      const evidence = tweets.slice(0, 3);
+
+      return {
+        dimensions,
+        analysis: `Based on @${currentHandle}'s recent ${tweets.length} tweets, AI found some interesting personality traits. This user's tweeting style reveals a unique combination of characteristics in social expression and self-awareness.`,
+        evidence
+      };
+    }
+
+    // =============================================
+    //  RENDER RESULT
+    // =============================================
+    function renderResult(r) {
+      const type = r.finalType;
+      document.getElementById('posterImage').src = TYPE_IMAGES[type.code] || '';
+      document.getElementById('resultKicker').textContent = r.kicker;
+      document.getElementById('resultTypeName').textContent = `${type.code}（${type.cn}）`;
+      document.getElementById('matchBadge').textContent = r.badge;
+      document.getElementById('resultTypeSub').textContent = r.sub;
+      document.getElementById('analysisText').textContent = r.analysis;
+
+      // Evidence tweets
+      const evidenceList = document.getElementById('evidenceList');
+      evidenceList.innerHTML = (r.evidence || []).map(t =>
+        `<div class="evidence-item">${escapeHtml(t)}</div>`
+      ).join('');
+
+      // Dimension list
+      const dimList = document.getElementById('dimList');
+      dimList.innerHTML = dimensionOrder.map(dim => {
+        const level = r.dimensions[dim] || 'M';
+        const explanation = DIM_EXPLANATIONS[dim][level];
+        return `
+          <div class="dim-item">
+            <div class="dim-item-top">
+              <div class="dim-item-name">${dimensionMeta[dim].name}</div>
+              <div class="dim-item-score">${level}</div>
+            </div>
+            <p>${explanation}</p>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // =============================================
+    //  SHARE FUNCTIONALITY
+    // =============================================
+    function getShareUrl() {
+      const type = currentResult?.finalType?.code || '';
+      return `https://sbti.sider.ai/?type=${encodeURIComponent(type)}&ref=share`;
+    }
+
+    function getShareText() {
+      const type = currentResult?.finalType;
+      if (!type) return '';
+      return t('shareTpl', { code: type.code, cn: type.cn });
+    }
+
+    // Share to Twitter
+    document.getElementById('shareTwitterBtn').addEventListener('click', () => {
+      const text = getShareText();
+      const url = getShareUrl();
+      window.open(
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
+        '_blank', 'width=600,height=400'
+      );
+    });
+
+    // Copy link
+    document.getElementById('copyLinkBtn').addEventListener('click', async () => {
+      const btn = document.getElementById('copyLinkBtn');
+      try {
+        await navigator.clipboard.writeText(getShareUrl());
+        btn.textContent = t('copied');
+        setTimeout(() => { btn.textContent = t('copyLink'); }, 2000);
+      } catch {
+        prompt('Copy this link:', getShareUrl());
+      }
+    });
+
+    // Download share card
+    document.getElementById('downloadImgBtn').addEventListener('click', () => {
+      generateShareCard().then(dataUrl => {
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = `SBTI-${currentResult?.finalType?.code || 'result'}.png`;
+        a.click();
+      });
+    });
+
+    async function generateShareCard() {
+      const canvas = document.getElementById('shareCanvas');
+      const ctx = canvas.getContext('2d');
+      const W = 800, H = 1200;
+      canvas.width = W; canvas.height = H;
+
+      // Background
+      const grad = ctx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, '#0a0a14');
+      grad.addColorStop(1, '#1a1a2e');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Accent circle
+      ctx.beginPath();
+      ctx.arc(W * 0.7, H * 0.15, 200, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(124,108,240,0.08)';
+      ctx.fill();
+
+      const type = currentResult?.finalType;
+      if (!type) return canvas.toDataURL();
+
+      // Title
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = '16px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SBTI x Twitter · ' + t('badge'), W / 2, 60);
+
+      // Type name
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 64px sans-serif';
+      ctx.fillText(type.code, W / 2, 160);
+
+      ctx.fillStyle = '#ffd700';
+      ctx.font = 'bold 32px sans-serif';
+      ctx.fillText(`（${type.cn}）`, W / 2, 210);
+
+      // Match badge
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = '18px sans-serif';
+      ctx.fillText(currentResult.badge, W / 2, 260);
+
+      // Intro
+      ctx.fillStyle = '#e8e8f0';
+      ctx.font = '20px sans-serif';
+      ctx.fillText(`"${type.intro}"`, W / 2, 320);
+
+      // Handle
+      ctx.fillStyle = '#8888a8';
+      ctx.font = '16px sans-serif';
+      ctx.fillText(`@${currentResult.handle}`, W / 2, 370);
+
+      // Dimensions (compact)
+      ctx.textAlign = 'left';
+      ctx.font = '15px sans-serif';
+      let y = 420;
+      dimensionOrder.forEach((dim, i) => {
+        const level = currentResult.dimensions[dim] || 'M';
+        const col = i % 2;
+        const x = col === 0 ? 60 : 420;
+        if (col === 0 && i > 0) y += 32;
+        ctx.fillStyle = '#8888a8';
+        ctx.fillText(dimensionMeta[dim].name, x, y);
+        ctx.fillStyle = level === 'H' ? '#2ecc71' : level === 'L' ? '#e74c3c' : '#f39c12';
+        ctx.fillText(level, x + 200, y);
+      });
+
+      // Footer
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = '18px sans-serif';
+      ctx.fillText(t('cardFooter'), W / 2, H - 60);
+
+      // Try to load and draw personality image
+      try {
+        const img = await loadImage(TYPE_IMAGES[type.code]);
+        const imgSize = 200;
+        const imgX = (W - imgSize) / 2;
+        const imgY = H - 340;
+        ctx.save();
+        ctx.beginPath();
+        ctx.roundRect(imgX, imgY, imgSize, imgSize, 16);
+        ctx.clip();
+        ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+        ctx.restore();
+      } catch {}
+
+      return canvas.toDataURL('image/png');
+    }
+
+    function loadImage(src) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    // =============================================
+    //  EVENT HANDLERS
+    // =============================================
+    document.getElementById('startBtn').addEventListener('click', () => {
+      const input = document.getElementById('handleInput');
+      const handle = input.value.trim().replace(/^@/, '');
+      if (!handle) {
+        input.style.borderColor = '#e74c3c';
+        setTimeout(() => { input.style.borderColor = ''; }, 1500);
+        return;
+      }
+      currentHandle = handle;
+
+      if (isExtensionInstalled()) {
+        startAnalysis();
+      } else {
+        showScreen('install');
+        startInstallCheck();
+      }
+    });
+
+    document.getElementById('handleInput').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('startBtn').click();
+    });
+
+    document.getElementById('backFromInstall').addEventListener('click', () => {
+      if (installCheckInterval) clearInterval(installCheckInterval);
+      showScreen('landing');
+    });
+
+    document.getElementById('retryBtn').addEventListener('click', () => {
+      currentResult = null;
+      showScreen('landing');
+      document.getElementById('handleInput').value = '';
+      document.getElementById('handleInput').focus();
+    });
+
+    // Web Share API for mobile
+    if (navigator.share) {
+      const webShareBtn = document.createElement('button');
+      webShareBtn.className = 'btn-share btn-copy';
+      webShareBtn.textContent = t('webShareMore');
+      webShareBtn.addEventListener('click', () => {
+        navigator.share({
+          title: `我的 SBTI 人格是 ${currentResult?.finalType?.code}`,
+          text: getShareText(),
+          url: getShareUrl()
+        }).catch(() => {});
+      });
+      document.querySelector('.share-buttons').appendChild(webShareBtn);
+    }
+  </script>
+</body>
+</html>
