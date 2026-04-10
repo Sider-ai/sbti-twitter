@@ -1222,12 +1222,15 @@
     // =============================================
     function sendToExtension(type, data) {
       return new Promise((resolve, reject) => {
+        console.log('[SBTI] Sending to extension:', type, data);
         const timeout = setTimeout(() => {
+          console.log('[SBTI] Extension response TIMEOUT');
           window.removeEventListener('web-response', handler);
           reject(new Error('Extension response timeout'));
-        }, 60000); // 60s timeout for scraping
+        }, 120000); // 120s timeout for scraping
 
         function handler(e) {
+          console.log('[SBTI] Got web-response:', e.detail);
           if (e.detail && e.detail.type === type) {
             clearTimeout(timeout);
             window.removeEventListener('web-response', handler);
@@ -1260,12 +1263,14 @@
         // Step 1: Trigger extension to open Twitter
         setStep(1);
         const scrapeResult = await sendToExtension('sbti-scrape-tweets', { handle: currentHandle });
+        console.log('[SBTI] scrapeResult:', JSON.stringify(scrapeResult));
 
         if (scrapeResult?.error) {
           throw new Error(scrapeResult.error);
         }
 
         const tweets = scrapeResult?.tweets || [];
+        console.log('[SBTI] tweets count:', tweets.length);
         if (tweets.length === 0) {
           throw new Error(t('noTweets'));
         }
