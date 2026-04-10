@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 // Import the analyze worker logic
-const LLM_API_URL = 'https://api.minimax.io/v1/text/chatcompletion_v2'
+const LLM_API_URL = 'https://api.minimax.chat/v1/text/chatcompletion_v2'
 const LLM_API_KEY = 'sk-cp-_iL5wBvbAQqixsc5Q9B2MXdJnkbz5UCkwSfK1mTKNqRccoNrgT4YpEo6Ok-GHEnc_wumcRH9ef-DYFE3nuyvJIHjoRTzIO5ZKBKLOTW1dAZRXow6L8w7Q78'
 
 const SYSTEM_PROMPT = `你是一位毒舌但精准的人格分析师。根据用户提供的推文，分析此人在SBTI框架15个维度上的表现。
