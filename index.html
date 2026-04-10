@@ -1323,11 +1323,20 @@
           body: JSON.stringify({ tweets, handle: currentHandle, lang: currentLang })
         });
 
-        if (!resp.ok) throw new Error(`API error: ${resp.status}`);
-        return await resp.json();
+        if (!resp.ok) {
+          const errBody = await resp.text();
+          console.error('[SBTI] API error:', resp.status, errBody);
+          throw new Error(`API error: ${resp.status} ${errBody}`);
+        }
+        const result = await resp.json();
+        console.log('[SBTI] API result:', JSON.stringify(result));
+        if (!result.analysis) {
+          console.warn('[SBTI] API returned no analysis, using fallback');
+          return fallbackAnalysis(tweets);
+        }
+        return result;
       } catch (e) {
-        // Fallback: if API is not available, do client-side mock analysis
-        console.warn('API not available, using fallback analysis:', e);
+        console.warn('[SBTI] API failed, using fallback:', e);
         return fallbackAnalysis(tweets);
       }
     }
