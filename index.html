@@ -653,7 +653,7 @@
     .faq-list { display: grid; gap: 8px; }
     .faq-item {
       border: 1px solid var(--panel-border); border-radius: 14px;
-      background: var(--bg2); overflow: hidden;
+      background: var(--bg2); overflow: hidden; text-align: left;
     }
     .faq-question {
       width: 100%; padding: 16px 18px; background: none;
@@ -669,6 +669,7 @@
     .faq-answer {
       max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
       padding: 0 18px; color: var(--muted); font-size: 13px; line-height: 1.8;
+      text-align: left;
     }
     .faq-item.open .faq-answer {
       max-height: 300px; padding: 0 18px 16px;
@@ -796,8 +797,23 @@
             <div class="type-detail-pattern" id="typeDetailPattern"></div>
           </div>
         </div>
-        <div class="type-detail-desc" id="typeDetailDesc"></div>
-        <div class="type-detail-cta">
+
+        <div style="margin-top:20px;">
+          <div class="section-title" data-i18n="sectionAnalysis">AI 个性化解读</div>
+          <p class="type-detail-desc" id="typeDetailDesc"></p>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div class="section-title" data-i18n="sectionDims">十五维度评分</div>
+          <div id="typeDetailDims" class="dim-list"></div>
+        </div>
+
+        <div style="margin-top:24px;">
+          <div class="section-title" data-i18n="typeDetailSimilar">相似人格</div>
+          <div id="typeDetailSimilar" style="display:flex; gap:10px; flex-wrap:wrap;"></div>
+        </div>
+
+        <div class="type-detail-cta" style="margin-top:24px;">
           <button id="typeDetailTestBtn" class="btn-primary" data-i18n="typeDetailTestCTA">Test Yourself</button>
         </div>
       </div>
@@ -1044,7 +1060,7 @@
         compareShareTpl: '刚测了SBTI人格测试，跟我默契超过{score}分的请我喝奶茶🧋',
         posterSave: '保存图片',
         typeDetailBack: '\u2190 返回',
-        typeDetailTestCTA: '来测测你是不是这种人格',
+        typeDetailTestCTA: '来测测你是不是这种人格', typeDetailSimilar: '相似人格',
         typeDetailPattern: '维度模式：{p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '4个维度怎么够？我们有15个',
@@ -1122,7 +1138,7 @@
         compareShareTpl: '剛測了SBTI人格測試，跟我默契超過{score}分的請我喝奶茶🧋',
         posterSave: '保存圖片',
         typeDetailBack: '\u2190 返回',
-        typeDetailTestCTA: '來測測你是不是這種人格',
+        typeDetailTestCTA: '來測測你是不是這種人格', typeDetailSimilar: '相似人格',
         typeDetailPattern: '維度模式：{p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '4個維度怎麼夠？我們有15個',
@@ -1200,7 +1216,7 @@
         compareShareTpl: 'Just took the SBTI personality test. Buy me boba if our compatibility is over {score}! 🧋',
         posterSave: 'Save Image',
         typeDetailBack: '\u2190 Back',
-        typeDetailTestCTA: 'Test yourself — are you this type?',
+        typeDetailTestCTA: 'Test yourself — are you this type?', typeDetailSimilar: 'Similar Types',
         typeDetailPattern: 'Dimension pattern: {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: 'Why settle for 4 dimensions when you can have 15?',
@@ -1278,7 +1294,7 @@
         compareShareTpl: 'SBTI性格テストを受けた。相性{score}点以上の人タピオカおごって🧋',
         posterSave: '画像を保存',
         typeDetailBack: '\u2190 戻る',
-        typeDetailTestCTA: 'あなたもこのタイプか試してみよう',
+        typeDetailTestCTA: 'あなたもこのタイプか試してみよう', typeDetailSimilar: '似ているタイプ',
         typeDetailPattern: '次元パターン：{p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '4次元で足りる？15次元あるよ',
@@ -1356,7 +1372,7 @@
         compareShareTpl: 'SBTI 성격 테스트 했는데 나랑 궁합 {score}점 이상이면 밀크티 사줘🧋',
         posterSave: '이미지 저장',
         typeDetailBack: '\u2190 돌아가기',
-        typeDetailTestCTA: '나도 이 유형인지 테스트해보기',
+        typeDetailTestCTA: '나도 이 유형인지 테스트해보기', typeDetailSimilar: '비슷한 유형',
         typeDetailPattern: '차원 패턴: {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '4차원으로 충분해? 우리는 15차원이야',
@@ -1434,7 +1450,7 @@
         compareShareTpl: 'Hab den SBTI-Test gemacht. Wer über {score} Punkte Kompatibilität hat, gibt einen Bubble Tea aus 🧋',
         posterSave: 'Bild speichern',
         typeDetailBack: '\u2190 Zur\u00fcck',
-        typeDetailTestCTA: 'Teste dich \u2014 bist du dieser Typ?',
+        typeDetailTestCTA: 'Teste dich \u2014 bist du dieser Typ?', typeDetailSimilar: '\u00c4hnliche Typen',
         typeDetailPattern: 'Dimensionsmuster: {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: 'Warum nur 4 Dimensionen, wenn du 15 haben kannst?',
@@ -1512,7 +1528,7 @@
         compareShareTpl: 'Hice el test SBTI. Si nuestra compatibilidad supera {score}, me invitas a un boba 🧋',
         posterSave: 'Guardar Imagen',
         typeDetailBack: '\u2190 Volver',
-        typeDetailTestCTA: '\u00bfEres este tipo? \u00a1Desc\u00fabrelo!',
+        typeDetailTestCTA: '\u00bfEres este tipo? \u00a1Desc\u00fabrelo!', typeDetailSimilar: 'Tipos similares',
         typeDetailPattern: 'Patr\u00f3n dimensional: {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '\u00bfPor qu\u00e9 conformarte con 4 dimensiones si puedes tener 15?',
@@ -1590,7 +1606,7 @@
         compareShareTpl: 'J\'ai fait le test SBTI. Si notre compatibilité dépasse {score}, offre-moi un boba 🧋',
         posterSave: 'Enregistrer l\'Image',
         typeDetailBack: '\u2190 Retour',
-        typeDetailTestCTA: '\u00cates-vous ce type ? D\u00e9couvrez-le !',
+        typeDetailTestCTA: '\u00cates-vous ce type ? D\u00e9couvrez-le !', typeDetailSimilar: 'Types similaires',
         typeDetailPattern: 'Mod\u00e8le dimensionnel : {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: 'Pourquoi 4 dimensions quand on peut en avoir 15 ?',
@@ -1668,7 +1684,7 @@
         compareShareTpl: 'SBTI kişilik testi yaptım. Benimle uyumu {score} üstü olan boba ısmarlar 🧋',
         posterSave: 'Resmi Kaydet',
         typeDetailBack: '\u2190 Geri',
-        typeDetailTestCTA: 'Sen de bu tip misin? Test et!',
+        typeDetailTestCTA: 'Sen de bu tip misin? Test et!', typeDetailSimilar: 'Benzer tipler',
         typeDetailPattern: 'Boyut deseni: {p}',
         compTableTitle: 'MBTI vs SBTI',
         compTableSub: '4 boyut yeterli mi? Bizde 15 tane var',
@@ -2046,11 +2062,58 @@
     function showTypeDetail(code) {
       const info = TYPE_LIBRARY[code];
       if (!info) return;
-      const pattern = NORMAL_TYPES.find(t => t.code === code);
+      const patternObj = NORMAL_TYPES.find(tp => tp.code === code);
       document.getElementById('typeDetailImg').src = TYPE_IMAGES[code] || '';
       document.getElementById('typeDetailName').textContent = code + '\uff08' + getTypeName(code) + '\uff09';
       document.getElementById('typeDetailDesc').textContent = info.desc || '';
-      document.getElementById('typeDetailPattern').textContent = pattern ? t('typeDetailPattern', { p: pattern.pattern }) : '';
+      document.getElementById('typeDetailPattern').textContent = patternObj ? t('typeDetailPattern', { p: patternObj.pattern }) : '';
+
+      // Render 15 dimensions for this type's pattern
+      const dimsContainer = document.getElementById('typeDetailDims');
+      if (patternObj) {
+        const levels = patternObj.pattern.replace(/-/g, '').split('');
+        dimsContainer.innerHTML = dimensionOrder.map((dim, i) => {
+          const level = levels[i] || 'M';
+          return `
+            <div class="dim-item">
+              <div class="dim-item-top">
+                <div class="dim-item-name">${getDimName(dim)}</div>
+                <div class="dim-item-score" style="color:${level === 'H' ? '#7c6cf0' : level === 'L' ? '#e74c3c' : '#f39c12'}">${level}</div>
+              </div>
+              <p>${getDimExplanation(dim, level)}</p>
+            </div>
+          `;
+        }).join('');
+      } else {
+        dimsContainer.innerHTML = '';
+      }
+
+      // Find similar types (closest by pattern distance)
+      const similarContainer = document.getElementById('typeDetailSimilar');
+      if (patternObj) {
+        const thisVector = patternObj.pattern.replace(/-/g, '').split('').map(l => ({ L: 1, M: 2, H: 3 }[l]));
+        const ranked = NORMAL_TYPES
+          .filter(tp => tp.code !== code)
+          .map(tp => {
+            const v = tp.pattern.replace(/-/g, '').split('').map(l => ({ L: 1, M: 2, H: 3 }[l]));
+            let dist = 0;
+            for (let i = 0; i < 15; i++) dist += Math.abs(thisVector[i] - v[i]);
+            return { code: tp.code, dist };
+          })
+          .sort((a, b) => a.dist - b.dist)
+          .slice(0, 4);
+
+        similarContainer.innerHTML = ranked.map(s => `
+          <div onclick="showTypeDetail('${s.code.replace(/'/g, "\\'")}')"
+               style="cursor:pointer; border:1px solid var(--panel-border); border-radius:12px; padding:12px 16px; background:var(--bg2); text-align:center; min-width:100px;">
+            <div style="font-weight:800; font-size:14px; color:var(--accent-strong);">${s.code}</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${getTypeName(s.code)}</div>
+          </div>
+        `).join('');
+      } else {
+        similarContainer.innerHTML = '';
+      }
+
       showScreen('typeDetail');
     }
 
