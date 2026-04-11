@@ -2729,33 +2729,20 @@
       const H = 320 + Math.min(estLines, 12) * 24 + 60 + 15 * 44 + 50 + 100 + 140;
       canvas.width = W; canvas.height = H;
 
-      // Background
-      const grad = ctx.createLinearGradient(0, 0, W, H);
-      grad.addColorStop(0, '#0a0a14');
-      grad.addColorStop(0.5, '#0f0f1a');
-      grad.addColorStop(1, '#1a1a2e');
-      ctx.fillStyle = grad;
+      // Background - warm off-white
+      ctx.fillStyle = '#fafaf8';
       ctx.fillRect(0, 0, W, H);
-
-      // Subtle glow
-      ctx.beginPath();
-      ctx.arc(W * 0.75, 120, 300, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(124,108,240,0.04)';
-      ctx.fill();
 
       // QR code in top-right
       try {
         const qrImg = await loadImage('./image/qrcode.png');
-        const qrSize = 90;
-        // White background for QR
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath(); ctx.roundRect(W - PAD - qrSize - 6, PAD - 6, qrSize + 12, qrSize + 12, 8); ctx.fill();
+        const qrSize = 80;
         ctx.drawImage(qrImg, W - PAD - qrSize, PAD, qrSize, qrSize);
       } catch { /* no QR */ }
 
       // Site name top-left
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = '14px sans-serif';
+      ctx.fillStyle = '#e8553d';
+      ctx.font = '14px Inter, sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText('sbti.sider.ai', PAD, PAD + 14);
 
@@ -2763,14 +2750,14 @@
 
       // Type translated name (large)
       ctx.textAlign = 'center';
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = 'bold 28px sans-serif';
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = 'bold 28px Inter, sans-serif';
       ctx.fillText(getTypeName(type.code), W / 2, y);
       y += 10;
 
       // Type code
-      ctx.fillStyle = '#ffd700';
-      ctx.font = 'bold 22px sans-serif';
+      ctx.fillStyle = '#e8553d';
+      ctx.font = 'bold 22px Inter, sans-serif';
       ctx.fillText(type.code, W / 2, y + 24);
       y += 40;
 
@@ -2780,83 +2767,83 @@
         const imgSize = 140;
         const imgX = (W - imgSize) / 2;
         ctx.save();
-        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 16); ctx.clip();
+        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 12); ctx.clip();
         ctx.drawImage(img, imgX, y, imgSize, imgSize);
         ctx.restore();
-        ctx.strokeStyle = 'rgba(124,108,240,0.25)';
-        ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 16); ctx.stroke();
+        ctx.strokeStyle = '#e8e5e0';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 12); ctx.stroke();
         y += imgSize + 20;
       } catch { y += 10; }
 
       // "TYPE (translated name)" line
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 36px sans-serif';
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = 'bold 32px Inter, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText(`${type.code}（${getTypeName(type.code)}）`, W / 2, y + 10);
       y += 24;
 
       // Match badge
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = '15px sans-serif';
+      ctx.fillStyle = '#e8553d';
+      ctx.font = '15px Inter, sans-serif';
       ctx.fillText(currentResult.badge, W / 2, y + 16);
       y += 40;
 
       // --- AI Analysis Section ---
       ctx.textAlign = 'left';
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = 'bold 16px sans-serif';
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = 'bold 16px Inter, sans-serif';
       ctx.fillText(t('sectionAnalysis'), PAD, y);
       y += 24;
 
-      ctx.fillStyle = '#c0c0d0';
-      ctx.font = '15px sans-serif';
-      const aLines = wrapText(ctx, analysisText, contentW, 15);
+      ctx.fillStyle = '#4a4a4a';
+      ctx.font = '14px Inter, sans-serif';
+      const aLines = wrapText(ctx, analysisText, contentW, 14);
       const maxALines = 12;
       aLines.slice(0, maxALines).forEach((line, i) => {
-        ctx.fillText(line, PAD, y + i * 24);
+        ctx.fillText(line, PAD, y + i * 22);
       });
       if (aLines.length > maxALines) {
-        ctx.fillText('...', PAD, y + maxALines * 24);
+        ctx.fillText('...', PAD, y + maxALines * 22);
       }
-      y += Math.min(aLines.length, maxALines) * 24 + 30;
+      y += Math.min(aLines.length, maxALines) * 22 + 28;
 
       // --- Separator ---
-      ctx.strokeStyle = 'rgba(124,108,240,0.15)';
+      ctx.strokeStyle = '#e8e5e0';
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(W - PAD, y); ctx.stroke();
       y += 20;
 
       // --- 15 Dimensions ---
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = 'bold 16px sans-serif';
+      ctx.fillStyle = '#1a1a1a';
+      ctx.font = 'bold 16px Inter, sans-serif';
       ctx.textAlign = 'left';
       ctx.fillText(t('sectionDims'), PAD, y);
       y += 28;
 
-      const dimRowH = 44;
+      const dimRowH = 42;
       dimensionOrder.forEach((dim) => {
         const level = currentResult.dimensions[dim] || 'M';
-        const levelColor = level === 'H' ? '#7c6cf0' : level === 'M' ? '#f39c12' : '#e74c3c';
+        const levelColor = level === 'H' ? '#16a34a' : level === 'M' ? '#d97706' : '#dc2626';
 
         // Dim name
-        ctx.fillStyle = '#e0e0ee';
-        ctx.font = 'bold 14px sans-serif';
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = 'bold 13px Inter, sans-serif';
         ctx.textAlign = 'left';
         ctx.fillText(getDimName(dim), PAD, y + 14);
 
-        // Level + score right-aligned
+        // Level right-aligned
         ctx.fillStyle = levelColor;
-        ctx.font = 'bold 14px sans-serif';
+        ctx.font = 'bold 13px Inter, sans-serif';
         ctx.textAlign = 'right';
         ctx.fillText(level, W - PAD, y + 14);
 
         // Explanation
-        ctx.fillStyle = '#8888a8';
-        ctx.font = '12px sans-serif';
+        ctx.fillStyle = '#6b7280';
+        ctx.font = '11px Inter, sans-serif';
         ctx.textAlign = 'left';
         const expl = getDimExplanation(dim, level);
-        ctx.fillText(expl.substring(0, 50) + (expl.length > 50 ? '...' : ''), PAD, y + 32);
+        ctx.fillText(expl.substring(0, 55) + (expl.length > 55 ? '...' : ''), PAD, y + 30);
 
         y += dimRowH;
       });
@@ -2864,24 +2851,24 @@
       y += 10;
 
       // --- Separator ---
-      ctx.strokeStyle = 'rgba(124,108,240,0.15)';
+      ctx.strokeStyle = '#e8e5e0';
       ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(W - PAD, y); ctx.stroke();
       y += 20;
 
       // --- Disclaimer ---
-      ctx.fillStyle = '#666680';
-      ctx.font = '12px sans-serif';
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '11px Inter, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(t('noteText').substring(0, 60) + '...', W / 2, y + 10);
-      y += 30;
+      ctx.fillText(t('noteText').substring(0, 65) + '...', W / 2, y + 10);
+      y += 28;
 
       // --- Footer ---
-      ctx.fillStyle = '#a29bfe';
-      ctx.font = 'bold 18px sans-serif';
+      ctx.fillStyle = '#e8553d';
+      ctx.font = 'bold 18px Inter, sans-serif';
       ctx.fillText('sbti.sider.ai', W / 2, y + 10);
-      y += 20;
-      ctx.fillStyle = '#666680';
-      ctx.font = '12px sans-serif';
+      y += 22;
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '12px Inter, sans-serif';
       ctx.fillText(t('cardFooter'), W / 2, y + 10);
 
       // Resize canvas to actual content height
