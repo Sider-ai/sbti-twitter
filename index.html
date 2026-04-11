@@ -1803,8 +1803,8 @@
       return DIM_EXPLANATIONS[dim]?.[level] || '';
     }
 
-    // Build language dropdown
-    (function initLangSwitcher() {
+    // Build language dropdown (called at end of script after all data is defined)
+    function initLangSwitcher() {
       const dropdown = document.getElementById('langDropdown');
       const btn = document.getElementById('langBtn');
       Object.entries(LANGS).forEach(([code, label]) => {
@@ -1827,7 +1827,7 @@
       document.addEventListener('click', () => dropdown.classList.remove('open'));
       applyI18n();
       renderTypesGrid();
-    })();
+    }
 
     function escapeHtml(str) {
       const div = document.createElement('div');
@@ -2930,6 +2930,9 @@
       });
       document.querySelector('.share-buttons').appendChild(webShareBtn);
     }
+
+    // Initialize everything now that all data is defined
+    initLangSwitcher();
   </script>
 </body>
 </html>
