@@ -34,24 +34,41 @@ Social Model:
 - So2 Interpersonal Boundaries: Merges souls with friends, or electric fence?
 - So3 Authenticity: Same person everywhere, or different mask for every room?
 
+## Type Matching Reference (dimension order: S1,S2,S3,E1,E2,E3,A1,A2,A3,Ac1,Ac2,Ac3,So1,So2,So3)
+
+CTRL=HHH-HMH-MHH-HHH-MHM, ATM-er=HHH-HHM-HHH-HMH-MHL, Dior-s=MHM-MMH-MHM-HMH-LHL,
+BOSS=HHH-HMH-MMH-HHH-LHL, THAN-K=MHM-HMM-HHM-MMH-MHL, OH-NO=HHL-LMH-LHH-HHM-LHL,
+GOGO=HHM-HMH-MMH-HHH-MHM, SEXY=HMH-HHL-HMM-HMM-HLH, LOVE-R=MLH-LHL-HLH-MLM-MLH,
+MUM=MMH-MHL-HMM-LMM-HLL, FAKE=HLM-MML-MLM-MLM-HLH, OJBK=MMH-MMM-HML-LMM-MML,
+MALO=MLH-MHM-MLH-MLH-LMH, JOKE-R=LLH-LHL-LML-LLL-MLM, WOC!=HHL-HMH-MMH-HHM-LHH,
+THIN-K=HHL-HMH-MLH-MHM-LHH, SHIT=HHL-HLH-LMM-HHM-LHH, ZZZZ=MHL-MLH-LML-MML-LHM,
+POOR=HHL-MLH-LMH-HHH-LHL, MONK=HHL-LLH-LLM-MML-LHM, IMSB=LLM-LMM-LLL-LLL-MLM,
+SOLO=LML-LLH-LHL-LML-LHM, FUCK=MLL-LHL-LLM-MLL-HLH, DEAD=LLL-LLM-LML-LLL-LHM,
+IMFW=LLH-LHL-LML-LLL-MLL
+
 ## Your Task
 
-1. Score all 15 dimensions as L (Low), M (Medium), or H (High) based on the tweets
-2. Write a KILLER analysis (250-350 words) that:
+1. Score all 15 dimensions as L/M/H based on the tweets
+2. After scoring, find which type pattern above best matches your scores (closest match by counting matching dimensions). Put the matched type code in the "matchedType" field.
+3. Write a KILLER analysis (250-350 words) that:
    - Opens with a punchy one-liner that nails who this person is
+   - MUST reference the matched SBTI type BY NAME early in the analysis (e.g. "You are a textbook ATM-er" or "Classic SHIT energy")
+   - Explains WHY their tweets match that specific SBTI type's traits
    - References specific tweets as evidence (quote them!)
    - Is funny, edgy, slightly roast-y but never mean-spirited
-   - Mentions which SBTI type they likely are and WHY (connect their tweet patterns to the type's traits)
    - Includes at least one metaphor or analogy that's so accurate it hurts
    - Ends with a backhanded compliment
-   - Reads like something people would screenshot and share on Twitter
-3. Pick the 3 most revealing tweets as evidence
+   - Reads like something people would screenshot and share
+4. Pick the 3 most revealing tweets as evidence
+
+CRITICAL: Do NOT invent new type names. Only use types from the list above. The "matchedType" must be one of: CTRL, ATM-er, Dior-s, BOSS, THAN-K, OH-NO, GOGO, SEXY, LOVE-R, MUM, FAKE, OJBK, MALO, JOKE-R, WOC!, THIN-K, SHIT, ZZZZ, POOR, MONK, IMSB, SOLO, FUCK, DEAD, IMFW, HHHH, DRUNK.
 
 ## Output Format
 Strict valid JSON only, no markdown, no code blocks:
 {
   "dimensions": {"S1":"H","S2":"M","S3":"L","E1":"M","E2":"H","E3":"L","A1":"M","A2":"H","A3":"M","Ac1":"H","Ac2":"M","Ac3":"H","So1":"M","So2":"H","So3":"L"},
-  "analysis": "Your killer analysis here",
+  "matchedType": "ATM-er",
+  "analysis": "Your killer analysis here - MUST mention the matchedType by name",
   "evidence": ["tweet1","tweet2","tweet3"]
 }`
 
