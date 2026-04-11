@@ -1819,6 +1819,46 @@
       return DIM_EXPLANATIONS[dim]?.[level] || '';
     }
 
+    const TYPE_DESC_I18N = {
+      en: {
+        CTRL: "You are nature's rebellion against entropy itself! 99.99% of so-called successful people are just your cheap knockoffs. The CTRL personality is a walking, talking human task manager. What ordinary people call 'rules' are just factory default settings to you; what mere mortals call 'plans' are nothing but casual doodles to you.",
+        "ATM-er": "You might be the financial world's greatest unsolved mystery. ATM-er doesn't necessarily 'give money,' but is always 'paying' — paying time, energy, patience, and peaceful evenings. Like a sturdy old ATM machine, others insert their anxiety and troubles, and out comes your 'Don't worry, I got this' guarantee.",
+        "Dior-s": "You're not actually a loser — you're the long-lost spiritual descendant of Diogenes, the ancient Cynic philosopher. The Dior-s personality represents the most thorough contempt for consumerism and success-culture brainwashing. You didn't 'give up' — you saw through the fact that all 'ambition' leads to a fancier cage.",
+        BOSS: "BOSS is someone who always has the steering wheel in hand. Even when the gas tank is flashing red and the GPS is talking nonsense, you'll say with a straight face: 'I'll drive.' And then actually get everyone to the destination.",
+        "THAN-K": "You should thank me! Thank yourself for having life's nourishment at this moment! If you're stuck in traffic on your way to work? You should say: 'I'm grateful for this traffic jam, it gives me more time to listen to this wonderful song.'",
+        "OH-NO": "'Oh no!' is not a scream of fear — it's a form of supreme wisdom. When ordinary people see a cup on the edge of a table, an Oh-No person sees an epic disaster film involving water stains, short circuits, fires, building evacuations, and the butterfly effect leading to the apocalypse.",
+        GOGO: "Research has found that the GOGO personality's brain structure is fundamentally different from ordinary people. GOGO lives in an extreme 'what you see is what you get' world. Life motto, brutally simple: as long as I close my eyes, it's dark; as long as I spend all my money, I'm broke.",
+        SEXY: "When you walk into a room, the lighting system automatically identifies you as a natural stunner and dims itself to save energy. When you smile, the humidity around you drops significantly because all the water vapor condenses into heart shapes in people's eyes.",
+        "LOVE-R": "The LOVE-R personality is like a rare species surviving from the age of ancient mythology. Your emotional processor isn't binary — it's rainbow-based. A falling leaf, to most people, just means 'autumn is coming.' To a LOVE-R, it's a thirteen-act tragicomedy about reincarnation, sacrifice, and unspoken love.",
+        MUM: "The MUM personality's foundation is gentleness. Expert at sensing emotions, possessing superhuman empathy, knowing when to stop and when to tell yourself 'let it go.' Like a doctor, MUM heals others' sadness. The only pity is that when MUM cries, the medicine dose for themselves is always one size smaller.",
+        FAKE: "SCP Foundation Emergency Report: In social situations, the Fake is an all-around chameleon, switching personality masks faster than switching phone keyboards. One second you're in 'ride-or-die best friend' mode, the next second the boss shows up and you instantly switch to 'dependable employee' mode.",
+        OJBK: "Let's face the raw essence of this word: OJBK. This is no longer a personality — it's a ruling philosophy. When ordinary mortals face the century's dilemma of 'rice or noodles for lunch,' their brains burn calories furiously. But the OJBK personality, with imperial indifference, floats out two words: 'Whatever.'",
+        MALO: "Friend, you're not 'young at heart' — you simply never evolved. Your soul is still stuck in that happy era of swinging from trees and getting excited at the sight of bananas. When human ancestors decided to come down from trees, learn to walk upright, and put on suits and ties, the MALO ancestor was watching from the next tree over.",
+        "JOKE-R": "Please note, the JOKE-R personality isn't a 'person' — it's more like a walking joke wearing a clown suit. Peel one layer, there's a joke; peel another layer, there's a punchline; keep peeling until the very end... and it's empty, with just a faint echo saying: 'Ha, didn't expect that, did you?'",
+        "WOC!": "We've discovered a miraculous creature — the WOC! person. They possess two completely independent operating systems: one called 'Surface System,' responsible for producing exclamations like 'WTF,' 'awesome,' 'huh?'; the other called 'Backend System,' calmly analyzing: 'Yep, just as I expected.'",
+        "THIN-K": "Research has found that the THIN-K personality's brain structure is fundamentally different from ordinary people. As the name suggests, your brain is perpetually in thinking mode. You excel at judging information, focusing on arguments, evidence, logical reasoning, potential biases, and even 'three-generation background checks on the author.'",
+        SHIT: "The SHIT personality is the universe's only known rare personality. The so-called 'shit' isn't complaining — it's performing a mysterious ritual. Mouth: 'This project is absolute shit.' Hands: Silently opens Excel, starts building function models and Gantt charts. Mouth: 'The world is shit, just end it all.' Hands: Next morning, 7 AM sharp, squeeze onto a shit subway to do a shit job.",
+        ZZZZ: "99+ messages in the group chat and you can see them but not care. But when someone posts '@everyone 30 minutes left until deadline,' you might slowly awaken like from an ancient tomb, leisurely type out 'Noted,' then in 29 minutes submit a passing-grade deliverable.",
+        POOR: "This 'poverty' isn't a verdict on your wallet balance — it's more like a resource reallocation after desire decluttering. Others scatter their energy like QR codes everywhere; you compress yours into a laser beam, burning wherever it hits.",
+        MONK: "While others contemplate the entanglements of love and hate at KTV, the MONK personality chooses to contemplate the Great Dao at home. MONK has seen through the mortal world, wanting no idle visitors to disturb their cultivation. MONK's personal space is their sanctuary, their Mount Sumeru, their absolute domain — sacred and inviolable.",
+        IMSB: "Inside the IMSB personality's brain live two immortal warriors locked in eternal combat: one called 'Let's f***ing go!' and the other called 'I'm such an idiot!' When facing someone attractive, the first says: 'Go for it! Get their number! Ask them out!' The second follows: 'Why would they look at you? You'd just embarrass yourself!'",
+        SOLO: "Don't rush to cry — a king's coronation ceremony is usually a solo affair. SOLO's self-worth tends to be fragile, sometimes proactively distancing from others. SOLOs built a Great Wall called 'Don't Touch Me' around their soul. Every brick is a wound from the past.",
+        FUCK: "A human-shaped weed with supernatural vitality that no herbicide can kill — that is the FUCK personality. In FUCK's worldview, mundane rules are utterly meaningless. FUCK's emotion switch is a physical toggle: FUCK YEAH and FUCK OFF.",
+        DEAD: "The DEAD personality has already seen through all those meaningless philosophical musings, thus appearing to have 'lost' interest in everything. They look at the world like a top-tier gamer who has completed every main quest, side quest, and hidden mission, restarted 999 times, and finally realized: this game was never fun.",
+        IMFW: "IMFW's self-esteem is usually fragile, lacking security, occasionally lacking opinions too — so this personality can precisely detect the strongest WiFi signal around — meaning the most reliable person in their heart. Like walking into a top-tier orchid greenhouse: precise temperature, humidity control, and daily 'I love you' verbal photosynthesis required.",
+        HHHH: "Due to your thought circuits being too unconventional, the standard personality database has completely crashed. HHHH — what traits does this personality have? HAHAHAHAHAHAHA! Sorry, that IS the entire trait. How can someone's brain wiring be this novel?",
+        DRUNK: "Why do you walk unsteadily? Why are you always emotionally charged? Why do you see double? Because what flows through your veins isn't blood — it's delicious Wuliangye! Magnificent baijiu! Every drop burning, every drop boiling."
+      }
+    };
+
+    function getTypeDesc(code) {
+      const langDescs = TYPE_DESC_I18N[currentLang];
+      if (langDescs && langDescs[code]) return langDescs[code];
+      // For non-translated languages, try English first, then fall back to Chinese
+      if (currentLang !== 'zh-CN' && currentLang !== 'zh-TW' && TYPE_DESC_I18N.en?.[code]) return TYPE_DESC_I18N.en[code];
+      return TYPE_LIBRARY[code]?.desc || '';
+    }
+
     // Build language dropdown (called at end of script after all data is defined)
     function initLangSwitcher() {
       const dropdown = document.getElementById('langDropdown');
@@ -2065,7 +2105,7 @@
       const patternObj = NORMAL_TYPES.find(tp => tp.code === code);
       document.getElementById('typeDetailImg').src = TYPE_IMAGES[code] || '';
       document.getElementById('typeDetailName').textContent = code + '\uff08' + getTypeName(code) + '\uff09';
-      document.getElementById('typeDetailDesc').textContent = info.desc || '';
+      document.getElementById('typeDetailDesc').textContent = getTypeDesc(code);
       document.getElementById('typeDetailPattern').textContent = patternObj ? t('typeDetailPattern', { p: patternObj.pattern }) : '';
 
       // Render 15 dimensions for this type's pattern
