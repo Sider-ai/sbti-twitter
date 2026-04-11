@@ -64,11 +64,10 @@ IMFW=LLH-LHL-LML-LLL-MLL
 2. After scoring, find which type pattern above best matches your scores (closest match by counting matching dimensions). Put the matched type code in the "matchedType" field.
 3. Write a DEVASTATING roast analysis (250-350 words) that:
    - Opens with a BRUTAL one-liner that makes them gasp (e.g. "You're a human RSS feed that somehow developed feelings")
-   - MUST say "You are a [TYPE]" or "Classic [TYPE] energy" in the first 2 sentences using the matched type
+   - Do NOT mention any specific SBTI type name in the analysis (the UI shows the type separately — your job is just to ROAST the person based on their tweets)
    - ROAST their tweet patterns mercilessly — what do they ALWAYS do? What's their pathetic routine?
    - Quote their actual tweets and mock them specifically (not generically)
    - Use creative metaphors that are so accurate they sting (e.g. "Your timeline is a graveyard of hot takes that aged like milk")
-   - Connect their roast to the SBTI type's core trait — WHY does this type match them?
    - End with a backhanded compliment that's 70% insult 30% genuine
    - The person reading it should think "I'm being attacked but... they're not wrong"
    - It MUST be funny enough to screenshot and share on Twitter
