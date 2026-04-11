@@ -565,6 +565,126 @@
     }
 
     /* ===== RESPONSIVE ===== */
+    /* ===== TYPE DETAIL SCREEN ===== */
+    .type-detail-wrap {
+      padding: 32px 28px;
+    }
+    .type-detail-back {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; color: var(--accent-strong); font-size: 14px;
+      border: 1px solid var(--panel-border); border-radius: 10px;
+      padding: 8px 16px; margin-bottom: 20px; cursor: pointer;
+    }
+    .type-detail-back:hover { background: var(--bg2); transform: none; }
+    .type-detail-header {
+      display: grid; grid-template-columns: 200px 1fr; gap: 24px;
+      align-items: start; margin-bottom: 28px;
+    }
+    .type-detail-img {
+      width: 100%; border-radius: 16px;
+      border: 1px solid var(--panel-border);
+    }
+    .type-detail-info h1 {
+      font-size: 32px; margin-bottom: 8px;
+      background: linear-gradient(135deg, #fff 30%, var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .type-detail-info .type-detail-pattern {
+      font-size: 13px; color: var(--muted); margin-top: 8px;
+      font-family: monospace; letter-spacing: 0.05em;
+    }
+    .type-detail-desc {
+      font-size: 15px; line-height: 1.9; color: var(--text);
+      margin-bottom: 24px;
+    }
+    .type-detail-cta {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    @media (max-width: 700px) {
+      .type-detail-header { grid-template-columns: 1fr; text-align: center; }
+      .type-detail-img { max-width: 200px; margin: 0 auto; }
+    }
+
+    /* ===== MBTI vs SBTI COMPARISON TABLE ===== */
+    .comparison-section {
+      margin-top: 36px; padding: 0 8px;
+    }
+    .comparison-section h2 {
+      font-size: 20px; text-align: center; margin-bottom: 16px;
+    }
+    .comparison-section .comp-sub {
+      text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 20px;
+    }
+    .comparison-table {
+      width: 100%; border-collapse: separate; border-spacing: 0;
+      border: 1px solid var(--panel-border); border-radius: 14px;
+      overflow: hidden; font-size: 13px;
+    }
+    .comparison-table th, .comparison-table td {
+      padding: 12px 14px; text-align: left;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .comparison-table th {
+      background: var(--accent-glow); color: var(--accent-strong);
+      font-weight: 700; font-size: 14px;
+    }
+    .comparison-table tr:last-child td { border-bottom: none; }
+    .comparison-table td:first-child {
+      color: var(--muted); font-weight: 600; background: var(--bg2);
+    }
+    .comparison-table td {
+      background: var(--panel); color: var(--text);
+    }
+    .comparison-table .highlight-col {
+      background: rgba(124,108,240,0.08);
+    }
+
+    /* ===== FAQ ACCORDION ===== */
+    .faq-section {
+      margin-top: 36px; padding: 0 8px;
+    }
+    .faq-section h2 {
+      font-size: 20px; text-align: center; margin-bottom: 16px;
+    }
+    .faq-section .faq-sub {
+      text-align: center; color: var(--muted); font-size: 14px; margin-bottom: 20px;
+    }
+    .faq-list { display: grid; gap: 8px; }
+    .faq-item {
+      border: 1px solid var(--panel-border); border-radius: 14px;
+      background: var(--bg2); overflow: hidden;
+    }
+    .faq-question {
+      width: 100%; padding: 16px 18px; background: none;
+      color: var(--text); font-size: 14px; font-weight: 700;
+      text-align: left; border: none; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-question:hover { background: var(--panel); transform: none; }
+    .faq-question .faq-arrow {
+      transition: transform 0.2s; font-size: 12px; color: var(--muted);
+    }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.3s ease;
+      padding: 0 18px; color: var(--muted); font-size: 13px; line-height: 1.8;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 300px; padding: 0 18px 16px;
+    }
+
+    /* ===== TYPE CARD CLICKABLE ===== */
+    .type-card-link {
+      border: 1px solid var(--panel-border); border-radius: 12px;
+      padding: 12px 10px; background: var(--bg2); text-align: center;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      text-decoration: none; display: block;
+    }
+    .type-card-link:hover {
+      border-color: var(--accent); background: var(--accent-glow);
+    }
+
     @media (max-width: 700px) {
       .result-top { grid-template-columns: 1fr; }
       .features { grid-template-columns: 1fr; }
@@ -626,10 +746,59 @@
           <div id="typesGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:8px;"></div>
         </div>
 
+        <div class="comparison-section">
+          <h2 data-i18n="compTableTitle">MBTI vs SBTI</h2>
+          <p class="comp-sub" data-i18n="compTableSub">Why settle for 4 dimensions when you can have 15?</p>
+          <table class="comparison-table">
+            <thead>
+              <tr><th data-i18n="compCol0"></th><th>MBTI</th><th class="highlight-col">SBTI</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-i18n="compRowDim">Dimensions</td><td>4</td><td class="highlight-col">15</td></tr>
+              <tr><td data-i18n="compRowTypes">Types</td><td>16</td><td class="highlight-col">27</td></tr>
+              <tr><td data-i18n="compRowMethod">Method</td><td data-i18n="compMBTIMethod">Self-report questionnaire</td><td class="highlight-col" data-i18n="compSBTIMethod">AI analysis of real behavior (tweets)</td></tr>
+              <tr><td data-i18n="compRowApproach">Approach</td><td data-i18n="compMBTIApproach">Binary categories (E/I, S/N, T/F, J/P)</td><td class="highlight-col" data-i18n="compSBTIApproach">Spectrum (L/M/H per dimension)</td></tr>
+              <tr><td data-i18n="compRowModels">Models</td><td>1</td><td class="highlight-col" data-i18n="compSBTIModels">5 (Self, Emotion, Attitude, Action, Social)</td></tr>
+              <tr><td data-i18n="compRowTone">Tone</td><td data-i18n="compMBTITone">Clinical/serious</td><td class="highlight-col" data-i18n="compSBTITone">Humorous/relatable</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="faq-section">
+          <h2 data-i18n="faqTitle">FAQ</h2>
+          <p class="faq-sub" data-i18n="faqSub">Everything you need to know</p>
+          <div class="faq-list" id="faqList">
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ1">What is SBTI?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA1">SBTI is a humorous personality framework with 15 dimensions across 5 models (Self, Emotion, Attitude, Action, Social), producing 27 unique personality types.</div></div>
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ2">How does AI analysis work?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA2">AI reads your recent 20 tweets and maps them to 15 personality dimensions, then matches you to one of 27 types.</div></div>
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ3">Is this accurate?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA3">This is for entertainment. While AI analysis can capture real behavioral patterns from your tweets, it should not be taken as a scientific assessment.</div></div>
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ4">Do I need to install anything?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA4">Yes, the Sider browser extension is needed to safely read your public tweets for analysis.</div></div>
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ5">Is my data safe?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA5">We don't store your tweets. The extension reads them temporarily for analysis and nothing is saved.</div></div>
+            <div class="faq-item"><button class="faq-question"><span data-i18n="faqQ6">How is this different from MBTI?</span><span class="faq-arrow">&#x25BC;</span></button><div class="faq-answer" data-i18n="faqA6">SBTI uses 15 dimensions vs 4, analyzes actual behavior vs self-report questionnaires, and has a humorous rather than clinical tone.</div></div>
+          </div>
+        </div>
+
         <div class="danmaku-controls">
           <input type="text" class="danmaku-input" id="danmakuInput" data-i18n-placeholder="danmakuPlaceholder" placeholder="说点什么..." maxlength="50" />
           <button class="danmaku-send" id="danmakuSendBtn" data-i18n="danmakuSend">发送</button>
           <button class="danmaku-toggle" id="danmakuToggle"><span class="dot"></span> <span data-i18n="danmakuOn">ON</span></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SCREEN: TYPE DETAIL ===== -->
+    <section id="typeDetail" class="screen">
+      <div class="type-detail-wrap card">
+        <button class="type-detail-back" id="typeDetailBack" data-i18n="typeDetailBack">&#x2190; Back</button>
+        <div class="type-detail-header">
+          <img id="typeDetailImg" class="type-detail-img" alt="" />
+          <div class="type-detail-info">
+            <h1 id="typeDetailName"></h1>
+            <div class="type-detail-pattern" id="typeDetailPattern"></div>
+          </div>
+        </div>
+        <div class="type-detail-desc" id="typeDetailDesc"></div>
+        <div class="type-detail-cta">
+          <button id="typeDetailTestBtn" class="btn-primary" data-i18n="typeDetailTestCTA">Test Yourself</button>
         </div>
       </div>
     </section>
@@ -874,6 +1043,39 @@
         friendBannerTpl: '你的好友 @{handle} 测出了 {type} — 来测测你们有多默契！',
         compareShareTpl: '刚测了SBTI人格测试，跟我默契超过{score}分的请我喝奶茶🧋',
         posterSave: '保存图片',
+        typeDetailBack: '\u2190 返回',
+        typeDetailTestCTA: '来测测你是不是这种人格',
+        typeDetailPattern: '维度模式：{p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '4个维度怎么够？我们有15个',
+        compCol0: '',
+        compRowDim: '维度数',
+        compRowTypes: '类型数',
+        compRowMethod: '测评方式',
+        compMBTIMethod: '自我报告问卷',
+        compSBTIMethod: 'AI 分析真实行为（推文）',
+        compRowApproach: '分析方法',
+        compMBTIApproach: '二元分类（E/I, S/N, T/F, J/P）',
+        compSBTIApproach: '光谱式（每维度 L/M/H）',
+        compRowModels: '模型数',
+        compSBTIModels: '5 个（自我、情感、态度、行动、社交）',
+        compRowTone: '风格',
+        compMBTITone: '严肃/临床',
+        compSBTITone: '幽默/接地气',
+        faqTitle: '常见问题',
+        faqSub: '你想知道的都在这里',
+        faqQ1: 'SBTI 是什么？',
+        faqA1: 'SBTI 是一个幽默的人格框架，包含 5 大模型（自我、情感、态度、行动、社交）的 15 个维度，共 27 种独特人格类型。',
+        faqQ2: 'AI 分析是怎么工作的？',
+        faqA2: 'AI 读取你最近的 20 条推文，将它们映射到 15 个人格维度，然后匹配 27 种类型中最适合你的。',
+        faqQ3: '这个准吗？',
+        faqA3: '本测试仅供娱乐。虽然 AI 分析能捕捉到推文中的真实行为模式，但不应作为科学评估。',
+        faqQ4: '需要安装什么吗？',
+        faqA4: '需要安装 Sider 浏览器插件，它会安全地读取你的公开推文进行分析。',
+        faqQ5: '我的数据安全吗？',
+        faqA5: '我们不存储你的推文。插件仅临时读取用于分析，不会保存任何数据。',
+        faqQ6: '和 MBTI 有什么区别？',
+        faqA6: 'SBTI 使用 15 个维度（vs MBTI 的 4 个），分析真实行为而非自我报告问卷，风格幽默而非严肃。',
       },
       'zh-TW': {
         badge: 'SBTI AI 人格分析',
@@ -919,6 +1121,39 @@
         friendBannerTpl: '你的好友 @{handle} 測出了 {type} — 來測測你們有多默契！',
         compareShareTpl: '剛測了SBTI人格測試，跟我默契超過{score}分的請我喝奶茶🧋',
         posterSave: '保存圖片',
+        typeDetailBack: '\u2190 返回',
+        typeDetailTestCTA: '來測測你是不是這種人格',
+        typeDetailPattern: '維度模式：{p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '4個維度怎麼夠？我們有15個',
+        compCol0: '',
+        compRowDim: '維度數',
+        compRowTypes: '類型數',
+        compRowMethod: '測評方式',
+        compMBTIMethod: '自我報告問卷',
+        compSBTIMethod: 'AI 分析真實行為（推文）',
+        compRowApproach: '分析方法',
+        compMBTIApproach: '二元分類（E/I, S/N, T/F, J/P）',
+        compSBTIApproach: '光譜式（每維度 L/M/H）',
+        compRowModels: '模型數',
+        compSBTIModels: '5 個（自我、情感、態度、行動、社交）',
+        compRowTone: '風格',
+        compMBTITone: '嚴肅/臨床',
+        compSBTITone: '幽默/接地氣',
+        faqTitle: '常見問題',
+        faqSub: '你想知道的都在這裡',
+        faqQ1: 'SBTI 是什麼？',
+        faqA1: 'SBTI 是一個幽默的人格框架，包含 5 大模型（自我、情感、態度、行動、社交）的 15 個維度，共 27 種獨特人格類型。',
+        faqQ2: 'AI 分析是怎麼工作的？',
+        faqA2: 'AI 讀取你最近的 20 條推文，將它們映射到 15 個人格維度，然後匹配 27 種類型中最適合你的。',
+        faqQ3: '這個準嗎？',
+        faqA3: '本測試僅供娛樂。雖然 AI 分析能捕捉到推文中的真實行為模式，但不應作為科學評估。',
+        faqQ4: '需要安裝什麼嗎？',
+        faqA4: '需要安裝 Sider 瀏覽器插件，它會安全地讀取你的公開推文進行分析。',
+        faqQ5: '我的數據安全嗎？',
+        faqA5: '我們不存儲你的推文。插件僅臨時讀取用於分析，不會保存任何數據。',
+        faqQ6: '和 MBTI 有什麼區別？',
+        faqA6: 'SBTI 使用 15 個維度（vs MBTI 的 4 個），分析真實行為而非自我報告問卷，風格幽默而非嚴肅。',
       },
       en: {
         badge: 'SBTI AI Personality Test',
@@ -964,6 +1199,39 @@
         friendBannerTpl: 'Your friend @{handle} got {type} — test yourself to compare!',
         compareShareTpl: 'Just took the SBTI personality test. Buy me boba if our compatibility is over {score}! 🧋',
         posterSave: 'Save Image',
+        typeDetailBack: '\u2190 Back',
+        typeDetailTestCTA: 'Test yourself — are you this type?',
+        typeDetailPattern: 'Dimension pattern: {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: 'Why settle for 4 dimensions when you can have 15?',
+        compCol0: '',
+        compRowDim: 'Dimensions',
+        compRowTypes: 'Types',
+        compRowMethod: 'Method',
+        compMBTIMethod: 'Self-report questionnaire',
+        compSBTIMethod: 'AI analysis of real behavior (tweets)',
+        compRowApproach: 'Approach',
+        compMBTIApproach: 'Binary categories (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: 'Spectrum (L/M/H per dimension)',
+        compRowModels: 'Models',
+        compSBTIModels: '5 (Self, Emotion, Attitude, Action, Social)',
+        compRowTone: 'Tone',
+        compMBTITone: 'Clinical/serious',
+        compSBTITone: 'Humorous/relatable',
+        faqTitle: 'FAQ',
+        faqSub: 'Everything you need to know',
+        faqQ1: 'What is SBTI?',
+        faqA1: 'SBTI is a humorous personality framework with 15 dimensions across 5 models (Self, Emotion, Attitude, Action, Social), producing 27 unique personality types.',
+        faqQ2: 'How does AI analysis work?',
+        faqA2: 'AI reads your recent 20 tweets and maps them to 15 personality dimensions, then matches you to one of 27 types.',
+        faqQ3: 'Is this accurate?',
+        faqA3: 'This is for entertainment. While AI analysis can capture real behavioral patterns from your tweets, it should not be taken as a scientific assessment.',
+        faqQ4: 'Do I need to install anything?',
+        faqA4: 'Yes, the Sider browser extension is needed to safely read your public tweets for analysis.',
+        faqQ5: 'Is my data safe?',
+        faqA5: 'We don\'t store your tweets. The extension reads them temporarily for analysis and nothing is saved.',
+        faqQ6: 'How is this different from MBTI?',
+        faqA6: 'SBTI uses 15 dimensions vs 4, analyzes actual behavior vs self-report questionnaires, and has a humorous rather than clinical tone.',
       },
       ja: {
         badge: 'SBTI AI 性格診断',
@@ -1009,6 +1277,39 @@
         friendBannerTpl: '友達の @{handle} は {type} でした — あなたも比較してみよう！',
         compareShareTpl: 'SBTI性格テストを受けた。相性{score}点以上の人タピオカおごって🧋',
         posterSave: '画像を保存',
+        typeDetailBack: '\u2190 戻る',
+        typeDetailTestCTA: 'あなたもこのタイプか試してみよう',
+        typeDetailPattern: '次元パターン：{p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '4次元で足りる？15次元あるよ',
+        compCol0: '',
+        compRowDim: '次元数',
+        compRowTypes: 'タイプ数',
+        compRowMethod: '方法',
+        compMBTIMethod: '自己申告アンケート',
+        compSBTIMethod: 'AI による実際の行動分析（ツイート）',
+        compRowApproach: 'アプローチ',
+        compMBTIApproach: '二項分類（E/I, S/N, T/F, J/P）',
+        compSBTIApproach: 'スペクトラム（各次元 L/M/H）',
+        compRowModels: 'モデル数',
+        compSBTIModels: '5（自己、感情、態度、行動、社交）',
+        compRowTone: 'トーン',
+        compMBTITone: '臨床的/真面目',
+        compSBTITone: 'ユーモア/親しみやすい',
+        faqTitle: 'よくある質問',
+        faqSub: '知りたいことはここに',
+        faqQ1: 'SBTIとは？',
+        faqA1: 'SBTIは5モデル（自己、感情、態度、行動、社交）15次元のユーモラスな性格フレームワークで、27のユニークなタイプがあります。',
+        faqQ2: 'AI分析はどう機能する？',
+        faqA2: 'AIが最近の20ツイートを読み、15の性格次元にマッピングし、27タイプの中からマッチングします。',
+        faqQ3: '正確ですか？',
+        faqA3: 'エンターテインメント目的です。AIはツイートから実際の行動パターンを捉えられますが、科学的評価ではありません。',
+        faqQ4: '何かインストールが必要？',
+        faqA4: 'はい、Siderブラウザ拡張機能が公開ツイートを安全に読み取るために必要です。',
+        faqQ5: 'データは安全？',
+        faqA5: 'ツイートは保存しません。拡張機能が分析のために一時的に読み取るだけです。',
+        faqQ6: 'MBTIとどう違う？',
+        faqA6: 'SBTIは15次元（MBTIは4）、自己申告ではなく実際の行動を分析し、臨床的ではなくユーモラスなトーンです。',
       },
       ko: {
         badge: 'SBTI AI 성격 분석',
@@ -1054,6 +1355,39 @@
         friendBannerTpl: '친구 @{handle}이(가) {type}으로 나왔어요 — 비교해보세요!',
         compareShareTpl: 'SBTI 성격 테스트 했는데 나랑 궁합 {score}점 이상이면 밀크티 사줘🧋',
         posterSave: '이미지 저장',
+        typeDetailBack: '\u2190 돌아가기',
+        typeDetailTestCTA: '나도 이 유형인지 테스트해보기',
+        typeDetailPattern: '차원 패턴: {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '4차원으로 충분해? 우리는 15차원이야',
+        compCol0: '',
+        compRowDim: '차원 수',
+        compRowTypes: '유형 수',
+        compRowMethod: '방법',
+        compMBTIMethod: '자기보고식 설문',
+        compSBTIMethod: 'AI 실제 행동 분석 (트윗)',
+        compRowApproach: '접근법',
+        compMBTIApproach: '이분법 (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: '스펙트럼 (차원별 L/M/H)',
+        compRowModels: '모델 수',
+        compSBTIModels: '5개 (자아, 감정, 태도, 행동, 사회)',
+        compRowTone: '톤',
+        compMBTITone: '임상적/진지한',
+        compSBTITone: '유머러스/공감가는',
+        faqTitle: '자주 묻는 질문',
+        faqSub: '궁금한 건 여기서 확인하세요',
+        faqQ1: 'SBTI가 뭔가요?',
+        faqA1: 'SBTI는 5개 모델(자아, 감정, 태도, 행동, 사회)의 15차원으로 구성된 유머러스한 성격 프레임워크로, 27가지 고유 유형이 있습니다.',
+        faqQ2: 'AI 분석은 어떻게 작동하나요?',
+        faqA2: 'AI가 최근 20개 트윗을 읽고 15개 성격 차원에 매핑한 후 27가지 유형 중 하나와 매칭합니다.',
+        faqQ3: '정확한가요?',
+        faqA3: '오락 목적입니다. AI 분석은 트윗에서 실제 행동 패턴을 포착할 수 있지만, 과학적 평가는 아닙니다.',
+        faqQ4: '설치해야 할 게 있나요?',
+        faqA4: '네, 공개 트윗을 안전하게 읽기 위해 Sider 브라우저 확장 프로그램이 필요합니다.',
+        faqQ5: '내 데이터는 안전한가요?',
+        faqA5: '트윗을 저장하지 않습니다. 확장 프로그램이 분석을 위해 일시적으로 읽을 뿐 저장하지 않습니다.',
+        faqQ6: 'MBTI와 어떻게 다른가요?',
+        faqA6: 'SBTI는 15차원(MBTI는 4), 자기보고가 아닌 실제 행동 분석, 임상적이 아닌 유머러스한 톤을 사용합니다.',
       },
       de: {
         badge: 'SBTI AI Persönlichkeitstest',
@@ -1099,6 +1433,39 @@
         friendBannerTpl: 'Dein Freund @{handle} hat {type} bekommen — teste dich zum Vergleich!',
         compareShareTpl: 'Hab den SBTI-Test gemacht. Wer über {score} Punkte Kompatibilität hat, gibt einen Bubble Tea aus 🧋',
         posterSave: 'Bild speichern',
+        typeDetailBack: '\u2190 Zur\u00fcck',
+        typeDetailTestCTA: 'Teste dich \u2014 bist du dieser Typ?',
+        typeDetailPattern: 'Dimensionsmuster: {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: 'Warum nur 4 Dimensionen, wenn du 15 haben kannst?',
+        compCol0: '',
+        compRowDim: 'Dimensionen',
+        compRowTypes: 'Typen',
+        compRowMethod: 'Methode',
+        compMBTIMethod: 'Selbstauskunft-Fragebogen',
+        compSBTIMethod: 'KI-Analyse von echtem Verhalten (Tweets)',
+        compRowApproach: 'Ansatz',
+        compMBTIApproach: 'Bin\u00e4re Kategorien (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: 'Spektrum (L/M/H pro Dimension)',
+        compRowModels: 'Modelle',
+        compSBTIModels: '5 (Selbst, Emotion, Haltung, Aktion, Soziales)',
+        compRowTone: 'Ton',
+        compMBTITone: 'Klinisch/ernst',
+        compSBTITone: 'Humorvoll/nahbar',
+        faqTitle: 'H\u00e4ufige Fragen',
+        faqSub: 'Alles was du wissen musst',
+        faqQ1: 'Was ist SBTI?',
+        faqA1: 'SBTI ist ein humorvolles Pers\u00f6nlichkeits-Framework mit 15 Dimensionen in 5 Modellen (Selbst, Emotion, Haltung, Aktion, Soziales) und 27 einzigartigen Typen.',
+        faqQ2: 'Wie funktioniert die KI-Analyse?',
+        faqA2: 'KI liest deine letzten 20 Tweets, ordnet sie 15 Pers\u00f6nlichkeitsdimensionen zu und matcht dich mit einem von 27 Typen.',
+        faqQ3: 'Ist das genau?',
+        faqA3: 'Dies dient der Unterhaltung. KI kann echte Verhaltensmuster aus Tweets erfassen, sollte aber nicht als wissenschaftliche Bewertung betrachtet werden.',
+        faqQ4: 'Muss ich etwas installieren?',
+        faqA4: 'Ja, die Sider Browser-Erweiterung wird ben\u00f6tigt, um deine \u00f6ffentlichen Tweets sicher zu lesen.',
+        faqQ5: 'Sind meine Daten sicher?',
+        faqA5: 'Wir speichern deine Tweets nicht. Die Erweiterung liest sie nur tempor\u00e4r f\u00fcr die Analyse.',
+        faqQ6: 'Wie unterscheidet sich das von MBTI?',
+        faqA6: 'SBTI nutzt 15 Dimensionen (vs 4), analysiert echtes Verhalten statt Selbstauskunft und hat einen humorvollen statt klinischen Ton.',
       },
       es: {
         badge: 'SBTI AI Test de Personalidad',
@@ -1144,6 +1511,39 @@
         friendBannerTpl: 'Tu amigo @{handle} obtuvo {type} — ¡compara contigo!',
         compareShareTpl: 'Hice el test SBTI. Si nuestra compatibilidad supera {score}, me invitas a un boba 🧋',
         posterSave: 'Guardar Imagen',
+        typeDetailBack: '\u2190 Volver',
+        typeDetailTestCTA: '\u00bfEres este tipo? \u00a1Desc\u00fabrelo!',
+        typeDetailPattern: 'Patr\u00f3n dimensional: {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '\u00bfPor qu\u00e9 conformarte con 4 dimensiones si puedes tener 15?',
+        compCol0: '',
+        compRowDim: 'Dimensiones',
+        compRowTypes: 'Tipos',
+        compRowMethod: 'M\u00e9todo',
+        compMBTIMethod: 'Cuestionario de autoinforme',
+        compSBTIMethod: 'An\u00e1lisis de IA del comportamiento real (tweets)',
+        compRowApproach: 'Enfoque',
+        compMBTIApproach: 'Categor\u00edas binarias (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: 'Espectro (L/M/H por dimensi\u00f3n)',
+        compRowModels: 'Modelos',
+        compSBTIModels: '5 (Yo, Emoci\u00f3n, Actitud, Acci\u00f3n, Social)',
+        compRowTone: 'Tono',
+        compMBTITone: 'Cl\u00ednico/serio',
+        compSBTITone: 'Humor\u00edstico/cercano',
+        faqTitle: 'Preguntas Frecuentes',
+        faqSub: 'Todo lo que necesitas saber',
+        faqQ1: '\u00bfQu\u00e9 es SBTI?',
+        faqA1: 'SBTI es un marco de personalidad humor\u00edstico con 15 dimensiones en 5 modelos (Yo, Emoci\u00f3n, Actitud, Acci\u00f3n, Social), con 27 tipos \u00fanicos.',
+        faqQ2: '\u00bfC\u00f3mo funciona el an\u00e1lisis de IA?',
+        faqA2: 'La IA lee tus \u00faltimos 20 tweets, los mapea a 15 dimensiones de personalidad y te empareja con uno de 27 tipos.',
+        faqQ3: '\u00bfEs preciso?',
+        faqA3: 'Es para entretenimiento. La IA puede captar patrones reales de comportamiento, pero no debe tomarse como evaluaci\u00f3n cient\u00edfica.',
+        faqQ4: '\u00bfNecesito instalar algo?',
+        faqA4: 'S\u00ed, se necesita la extensi\u00f3n Sider para leer tus tweets p\u00fablicos de forma segura.',
+        faqQ5: '\u00bfMis datos est\u00e1n seguros?',
+        faqA5: 'No almacenamos tus tweets. La extensi\u00f3n los lee temporalmente para el an\u00e1lisis.',
+        faqQ6: '\u00bfEn qu\u00e9 se diferencia de MBTI?',
+        faqA6: 'SBTI usa 15 dimensiones (vs 4), analiza comportamiento real en vez de autoinformes y tiene un tono humor\u00edstico en vez de cl\u00ednico.',
       },
       fr: {
         badge: 'SBTI AI Test de Personnalité',
@@ -1189,6 +1589,39 @@
         friendBannerTpl: 'Votre ami @{handle} a obtenu {type} — comparez avec vous !',
         compareShareTpl: 'J\'ai fait le test SBTI. Si notre compatibilité dépasse {score}, offre-moi un boba 🧋',
         posterSave: 'Enregistrer l\'Image',
+        typeDetailBack: '\u2190 Retour',
+        typeDetailTestCTA: '\u00cates-vous ce type ? D\u00e9couvrez-le !',
+        typeDetailPattern: 'Mod\u00e8le dimensionnel : {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: 'Pourquoi 4 dimensions quand on peut en avoir 15 ?',
+        compCol0: '',
+        compRowDim: 'Dimensions',
+        compRowTypes: 'Types',
+        compRowMethod: 'M\u00e9thode',
+        compMBTIMethod: 'Questionnaire auto-d\u00e9claratif',
+        compSBTIMethod: 'Analyse IA du comportement r\u00e9el (tweets)',
+        compRowApproach: 'Approche',
+        compMBTIApproach: 'Cat\u00e9gories binaires (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: 'Spectre (L/M/H par dimension)',
+        compRowModels: 'Mod\u00e8les',
+        compSBTIModels: '5 (Soi, \u00c9motion, Attitude, Action, Social)',
+        compRowTone: 'Ton',
+        compMBTITone: 'Clinique/s\u00e9rieux',
+        compSBTITone: 'Humoristique/accessible',
+        faqTitle: 'Questions Fr\u00e9quentes',
+        faqSub: 'Tout ce que vous devez savoir',
+        faqQ1: 'Qu\'est-ce que le SBTI ?',
+        faqA1: 'Le SBTI est un cadre de personnalit\u00e9 humoristique avec 15 dimensions dans 5 mod\u00e8les (Soi, \u00c9motion, Attitude, Action, Social), donnant 27 types uniques.',
+        faqQ2: 'Comment fonctionne l\'analyse IA ?',
+        faqA2: 'L\'IA lit vos 20 derniers tweets, les cartographie sur 15 dimensions de personnalit\u00e9 et vous associe \u00e0 l\'un des 27 types.',
+        faqQ3: 'Est-ce pr\u00e9cis ?',
+        faqA3: 'C\'est pour le divertissement. L\'IA peut capter des comportements r\u00e9els, mais ce n\'est pas une \u00e9valuation scientifique.',
+        faqQ4: 'Dois-je installer quelque chose ?',
+        faqA4: 'Oui, l\'extension Sider est n\u00e9cessaire pour lire vos tweets publics en toute s\u00e9curit\u00e9.',
+        faqQ5: 'Mes donn\u00e9es sont-elles en s\u00e9curit\u00e9 ?',
+        faqA5: 'Nous ne stockons pas vos tweets. L\'extension les lit temporairement pour l\'analyse.',
+        faqQ6: 'Quelle diff\u00e9rence avec MBTI ?',
+        faqA6: 'SBTI utilise 15 dimensions (vs 4), analyse le comportement r\u00e9el au lieu de l\'auto-d\u00e9claration, avec un ton humoristique plut\u00f4t que clinique.',
       },
       tr: {
         badge: 'SBTI AI Kişilik Testi',
@@ -1234,6 +1667,39 @@
         friendBannerTpl: 'Arkadaşın @{handle} {type} çıktı — kendinle karşılaştır!',
         compareShareTpl: 'SBTI kişilik testi yaptım. Benimle uyumu {score} üstü olan boba ısmarlar 🧋',
         posterSave: 'Resmi Kaydet',
+        typeDetailBack: '\u2190 Geri',
+        typeDetailTestCTA: 'Sen de bu tip misin? Test et!',
+        typeDetailPattern: 'Boyut deseni: {p}',
+        compTableTitle: 'MBTI vs SBTI',
+        compTableSub: '4 boyut yeterli mi? Bizde 15 tane var',
+        compCol0: '',
+        compRowDim: 'Boyutlar',
+        compRowTypes: 'Tipler',
+        compRowMethod: 'Y\u00f6ntem',
+        compMBTIMethod: '\u00d6z bildirim anketi',
+        compSBTIMethod: 'Ger\u00e7ek davran\u0131\u015f AI analizi (tweetler)',
+        compRowApproach: 'Yakla\u015f\u0131m',
+        compMBTIApproach: '\u0130kili kategoriler (E/I, S/N, T/F, J/P)',
+        compSBTIApproach: 'Spektrum (boyut ba\u015f\u0131na L/M/H)',
+        compRowModels: 'Modeller',
+        compSBTIModels: '5 (Benlik, Duygu, Tutum, Eylem, Sosyal)',
+        compRowTone: 'Ton',
+        compMBTITone: 'Klinik/ciddi',
+        compSBTITone: 'Espirili/samimi',
+        faqTitle: 'S\u0131k Sorulan Sorular',
+        faqSub: 'Bilmen gereken her \u015fey',
+        faqQ1: 'SBTI nedir?',
+        faqA1: 'SBTI, 5 modelde (Benlik, Duygu, Tutum, Eylem, Sosyal) 15 boyutlu espirili bir ki\u015filik \u00e7er\u00e7evesidir ve 27 benzersiz tip i\u00e7erir.',
+        faqQ2: 'AI analizi nas\u0131l \u00e7al\u0131\u015f\u0131r?',
+        faqA2: 'AI son 20 tweetinizi okur, 15 ki\u015filik boyutuna e\u015fler ve 27 tipten biriyle e\u015fle\u015ftirir.',
+        faqQ3: 'Bu do\u011fru mu?',
+        faqA3: 'E\u011flence ama\u00e7l\u0131d\u0131r. AI tweetlerden ger\u00e7ek davran\u0131\u015f kal\u0131plar\u0131n\u0131 yakalayabilir ama bilimsel de\u011ferlendirme de\u011fildir.',
+        faqQ4: 'Bir \u015fey y\u00fcklemem gerekiyor mu?',
+        faqA4: 'Evet, herkese a\u00e7\u0131k tweetlerinizi g\u00fcvenle okumak i\u00e7in Sider taray\u0131c\u0131 uzant\u0131s\u0131 gereklidir.',
+        faqQ5: 'Verilerim g\u00fcvende mi?',
+        faqA5: 'Tweetlerinizi saklamay\u0131z. Uzant\u0131 analiz i\u00e7in ge\u00e7ici olarak okur, hi\u00e7bir \u015fey kaydedilmez.',
+        faqQ6: 'MBTI\'dan fark\u0131 ne?',
+        faqA6: 'SBTI 15 boyut kullan\u0131r (vs 4), \u00f6z bildirim yerine ger\u00e7ek davran\u0131\u015f\u0131 analiz eder ve klinik de\u011fil espirili bir ton kullan\u0131r.',
       },
     };
 
@@ -1363,16 +1829,27 @@
       renderTypesGrid();
     })();
 
+    function escapeHtml(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
     function renderTypesGrid() {
       const grid = document.getElementById('typesGrid');
       if (!grid) return;
       const showTypes = ['CTRL','ATM-er','Dior-s','BOSS','THAN-K','OH-NO','GOGO','SEXY','LOVE-R','MUM','FAKE','OJBK','MALO','JOKE-R','WOC!','THIN-K','SHIT','ZZZZ','POOR','MONK','IMSB','SOLO','FUCK','DEAD','IMFW','HHHH','DRUNK'];
-      grid.innerHTML = showTypes.map(code => `
-        <div style="border:1px solid var(--panel-border); border-radius:12px; padding:12px 10px; background:var(--bg2); text-align:center;">
+      grid.innerHTML = showTypes.map(code => {
+        const info = TYPE_LIBRARY[code];
+        const intro = info ? info.intro : '';
+        return `
+        <div class="type-card-link" onclick="showTypeDetail('${code.replace(/'/g, "\\'")}')">
           <div style="font-weight:800; font-size:14px; color:var(--accent-strong);">${code}</div>
           <div style="font-size:12px; color:var(--muted); margin-top:4px;">${getTypeName(code)}</div>
+          <div style="font-size:11px; color:var(--muted); margin-top:6px; opacity:0.7; line-height:1.4;">${escapeHtml(intro)}</div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // =============================================
@@ -1539,6 +2016,7 @@
 
     const screens = {
       landing: document.getElementById('landing'),
+      typeDetail: document.getElementById('typeDetail'),
       install: document.getElementById('install'),
       loading: document.getElementById('loading'),
       result: document.getElementById('result'),
@@ -1560,6 +2038,52 @@
         teaser.textContent = t('referralTpl', { code: tp.code, cn: getTypeName(tp.code) });
         teaser.style.display = 'block';
       }
+    })();
+
+    // =============================================
+    //  TYPE DETAIL SCREEN
+    // =============================================
+    function showTypeDetail(code) {
+      const info = TYPE_LIBRARY[code];
+      if (!info) return;
+      const pattern = NORMAL_TYPES.find(t => t.code === code);
+      document.getElementById('typeDetailImg').src = TYPE_IMAGES[code] || '';
+      document.getElementById('typeDetailName').textContent = code + '\uff08' + getTypeName(code) + '\uff09';
+      document.getElementById('typeDetailDesc').textContent = info.desc || '';
+      document.getElementById('typeDetailPattern').textContent = pattern ? t('typeDetailPattern', { p: pattern.pattern }) : '';
+      showScreen('typeDetail');
+    }
+
+    document.getElementById('typeDetailBack').addEventListener('click', function() {
+      showScreen('landing');
+    });
+
+    document.getElementById('typeDetailTestBtn').addEventListener('click', function() {
+      showScreen('landing');
+      var input = document.getElementById('handleInput');
+      input.focus();
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    // Check URL for ?type=XXX to show type detail on load
+    (function checkTypeParam() {
+      var params = new URLSearchParams(location.search);
+      var typeCode = params.get('type');
+      if (typeCode && TYPE_LIBRARY[typeCode] && !params.get('a')) {
+        showTypeDetail(typeCode);
+      }
+    })();
+
+    // =============================================
+    //  FAQ ACCORDION
+    // =============================================
+    (function initFaq() {
+      document.querySelectorAll('.faq-question').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var item = btn.parentElement;
+          item.classList.toggle('open');
+        });
+      });
     })();
 
     // =============================================
@@ -1780,12 +2304,6 @@
           </div>
         `;
       }).join('');
-    }
-
-    function escapeHtml(str) {
-      const div = document.createElement('div');
-      div.textContent = str;
-      return div.innerHTML;
     }
 
     // =============================================
