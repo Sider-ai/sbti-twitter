@@ -1792,152 +1792,183 @@
     async function generateShareCard() {
       const canvas = document.getElementById('shareCanvas');
       const ctx = canvas.getContext('2d');
-      const W = 800, H = 1200;
+      const W = 800;
+      const PAD = 50;
+      const contentW = W - PAD * 2;
+
+      // Pre-calculate height based on content
+      const type = currentResult?.finalType;
+      if (!type) { canvas.width = W; canvas.height = 400; return canvas.toDataURL(); }
+
+      // Estimate height: header(280) + analysis(~200) + dims(15*44+40) + footer(120)
+      const analysisText = currentResult.analysis || '';
+      ctx.font = '15px sans-serif';
+      const estLines = Math.ceil(analysisText.length / 38);
+      const H = 320 + Math.min(estLines, 12) * 24 + 60 + 15 * 44 + 50 + 100 + 140;
       canvas.width = W; canvas.height = H;
 
-      // Background gradient
+      // Background
       const grad = ctx.createLinearGradient(0, 0, W, H);
       grad.addColorStop(0, '#0a0a14');
-      grad.addColorStop(0.5, '#12121f');
+      grad.addColorStop(0.5, '#0f0f1a');
       grad.addColorStop(1, '#1a1a2e');
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      // Decorative circles
+      // Subtle glow
       ctx.beginPath();
-      ctx.arc(W * 0.8, 100, 250, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(124,108,240,0.06)';
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(100, H * 0.7, 180, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(155,89,182,0.05)';
+      ctx.arc(W * 0.75, 120, 300, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(124,108,240,0.04)';
       ctx.fill();
 
-      const type = currentResult?.finalType;
-      if (!type) return canvas.toDataURL();
-
-      let y = 40;
-
-      // Try to draw personality image at top
+      // QR code in top-right
       try {
-        const img = await loadImage(TYPE_IMAGES[type.code]);
-        const imgSize = 160;
-        const imgX = (W - imgSize) / 2;
-        ctx.save();
-        ctx.beginPath();
-        ctx.roundRect(imgX, y, imgSize, imgSize, 20);
-        ctx.clip();
-        ctx.drawImage(img, imgX, y, imgSize, imgSize);
-        ctx.restore();
-        // Border
-        ctx.strokeStyle = 'rgba(124,108,240,0.3)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.roundRect(imgX, y, imgSize, imgSize, 20);
-        ctx.stroke();
-        y += imgSize + 20;
-      } catch { y += 20; }
+        const qrImg = await loadImage('./image/qrcode.png');
+        const qrSize = 90;
+        // White background for QR
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.roundRect(W - PAD - qrSize - 6, PAD - 6, qrSize + 12, qrSize + 12, 8); ctx.fill();
+        ctx.drawImage(qrImg, W - PAD - qrSize, PAD, qrSize, qrSize);
+      } catch { /* no QR */ }
+
+      // Site name top-left
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = '14px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('sbti.sider.ai', PAD, PAD + 14);
+
+      let y = PAD + 50;
+
+      // Type translated name (large)
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = 'bold 28px sans-serif';
+      ctx.fillText(getTypeName(type.code), W / 2, y);
+      y += 10;
 
       // Type code
-      ctx.textAlign = 'center';
-      ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 52px sans-serif';
-      ctx.fillText(type.code, W / 2, y + 40);
-      y += 50;
-
-      // Type name
       ctx.fillStyle = '#ffd700';
-      ctx.font = 'bold 26px sans-serif';
-      ctx.fillText(getTypeName(type.code), W / 2, y + 24);
-      y += 36;
+      ctx.font = 'bold 22px sans-serif';
+      ctx.fillText(type.code, W / 2, y + 24);
+      y += 40;
+
+      // Personality image
+      try {
+        const img = await loadImage(TYPE_IMAGES[type.code]);
+        const imgSize = 140;
+        const imgX = (W - imgSize) / 2;
+        ctx.save();
+        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 16); ctx.clip();
+        ctx.drawImage(img, imgX, y, imgSize, imgSize);
+        ctx.restore();
+        ctx.strokeStyle = 'rgba(124,108,240,0.25)';
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.roundRect(imgX, y, imgSize, imgSize, 16); ctx.stroke();
+        y += imgSize + 20;
+      } catch { y += 10; }
+
+      // "TYPE (translated name)" line
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 36px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(`${type.code}（${getTypeName(type.code)}）`, W / 2, y + 10);
+      y += 24;
 
       // Match badge
       ctx.fillStyle = '#a29bfe';
-      ctx.font = '16px sans-serif';
-      ctx.fillText(currentResult.badge, W / 2, y + 18);
-      y += 34;
+      ctx.font = '15px sans-serif';
+      ctx.fillText(currentResult.badge, W / 2, y + 16);
+      y += 40;
 
-      // AI analysis (truncated)
-      const analysisText = (currentResult.analysis || '').substring(0, 120) + (currentResult.analysis?.length > 120 ? '...' : '');
-      ctx.fillStyle = '#c8c8d8';
-      ctx.font = '14px sans-serif';
+      // --- AI Analysis Section ---
       ctx.textAlign = 'left';
-      const analysisLines = wrapText(ctx, analysisText, W - 120, 14);
-      analysisLines.forEach((line, i) => {
-        if (i < 4) ctx.fillText(line, 60, y + 16 + i * 20);
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText(t('sectionAnalysis'), PAD, y);
+      y += 24;
+
+      ctx.fillStyle = '#c0c0d0';
+      ctx.font = '15px sans-serif';
+      const aLines = wrapText(ctx, analysisText, contentW, 15);
+      const maxALines = 12;
+      aLines.slice(0, maxALines).forEach((line, i) => {
+        ctx.fillText(line, PAD, y + i * 24);
       });
-      y += Math.min(analysisLines.length, 4) * 20 + 26;
+      if (aLines.length > maxALines) {
+        ctx.fillText('...', PAD, y + maxALines * 24);
+      }
+      y += Math.min(aLines.length, maxALines) * 24 + 30;
 
-      // Separator
-      ctx.strokeStyle = 'rgba(124,108,240,0.2)';
+      // --- Separator ---
+      ctx.strokeStyle = 'rgba(124,108,240,0.15)';
       ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
-      y += 16;
+      ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(W - PAD, y); ctx.stroke();
+      y += 20;
 
-      // 15 dimensions with color-coded bars
-      ctx.font = 'bold 14px sans-serif';
-      ctx.fillStyle = '#8888a8';
+      // --- 15 Dimensions ---
+      ctx.fillStyle = '#a29bfe';
+      ctx.font = 'bold 16px sans-serif';
       ctx.textAlign = 'left';
-      ctx.fillText(t('sectionDims'), 60, y + 14);
+      ctx.fillText(t('sectionDims'), PAD, y);
       y += 28;
 
-      const barWidth = 100, barHeight = 14, rowH = 28;
-      dimensionOrder.forEach((dim, i) => {
+      const dimRowH = 44;
+      dimensionOrder.forEach((dim) => {
         const level = currentResult.dimensions[dim] || 'M';
-        const col = i < 8 ? 0 : 1;
-        const row = i < 8 ? i : i - 8;
-        const x = col === 0 ? 60 : 420;
-        const ry = y + row * rowH;
+        const levelColor = level === 'H' ? '#7c6cf0' : level === 'M' ? '#f39c12' : '#e74c3c';
 
         // Dim name
+        ctx.fillStyle = '#e0e0ee';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'left';
+        ctx.fillText(getDimName(dim), PAD, y + 14);
+
+        // Level + score right-aligned
+        ctx.fillStyle = levelColor;
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'right';
+        ctx.fillText(level, W - PAD, y + 14);
+
+        // Explanation
         ctx.fillStyle = '#8888a8';
         ctx.font = '12px sans-serif';
         ctx.textAlign = 'left';
-        const shortName = dim;
-        ctx.fillText(shortName, x, ry + 11);
+        const expl = getDimExplanation(dim, level);
+        ctx.fillText(expl.substring(0, 50) + (expl.length > 50 ? '...' : ''), PAD, y + 32);
 
-        // Bar background
-        const bx = x + 40;
-        ctx.fillStyle = 'rgba(255,255,255,0.06)';
-        ctx.beginPath(); ctx.roundRect(bx, ry, barWidth, barHeight, 4); ctx.fill();
-
-        // Bar fill
-        const fillPct = level === 'H' ? 1.0 : level === 'M' ? 0.55 : 0.2;
-        const barColor = level === 'H' ? '#2ecc71' : level === 'M' ? '#f39c12' : '#e74c3c';
-        ctx.fillStyle = barColor;
-        ctx.beginPath(); ctx.roundRect(bx, ry, barWidth * fillPct, barHeight, 4); ctx.fill();
-
-        // Level label
-        ctx.fillStyle = barColor;
-        ctx.font = 'bold 12px sans-serif';
-        ctx.textAlign = 'left';
-        ctx.fillText(level, bx + barWidth + 8, ry + 11);
+        y += dimRowH;
       });
 
-      y += Math.max(8, 7) * rowH + 16;
+      y += 10;
 
-      // Separator
-      ctx.strokeStyle = 'rgba(124,108,240,0.2)';
-      ctx.beginPath(); ctx.moveTo(60, y); ctx.lineTo(W - 60, y); ctx.stroke();
+      // --- Separator ---
+      ctx.strokeStyle = 'rgba(124,108,240,0.15)';
+      ctx.beginPath(); ctx.moveTo(PAD, y); ctx.lineTo(W - PAD, y); ctx.stroke();
       y += 20;
 
-      // QR code area placeholder + URL
+      // --- Disclaimer ---
+      ctx.fillStyle = '#666680';
+      ctx.font = '12px sans-serif';
       ctx.textAlign = 'center';
-      // Draw a bordered box as QR placeholder
-      const qrSize = 80;
-      const qrX = (W - qrSize) / 2;
-      ctx.strokeStyle = 'rgba(124,108,240,0.3)';
-      ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.roundRect(qrX, y, qrSize, qrSize, 10); ctx.stroke();
-      ctx.fillStyle = '#555';
-      ctx.font = '10px sans-serif';
-      ctx.fillText('QR', W / 2, y + qrSize / 2 + 4);
-      y += qrSize + 14;
+      ctx.fillText(t('noteText').substring(0, 60) + '...', W / 2, y + 10);
+      y += 30;
 
+      // --- Footer ---
       ctx.fillStyle = '#a29bfe';
-      ctx.font = '16px sans-serif';
+      ctx.font = 'bold 18px sans-serif';
       ctx.fillText('sbti.sider.ai', W / 2, y + 10);
       y += 20;
+      ctx.fillStyle = '#666680';
+      ctx.font = '12px sans-serif';
+      ctx.fillText(t('cardFooter'), W / 2, y + 10);
+
+      // Resize canvas to actual content height
+      const finalH = y + 40;
+      if (finalH < H) {
+        const imageData = ctx.getImageData(0, 0, W, finalH);
+        canvas.height = finalH;
+        ctx.putImageData(imageData, 0, 0);
+      }
 
       // Footer
       ctx.fillStyle = '#666';
