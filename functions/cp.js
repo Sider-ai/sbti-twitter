@@ -65,13 +65,15 @@ export async function onRequest(context) {
   const pageUrl = `${siteUrl}/cp?a=${dna}&t=${encodeURIComponent(typeCode)}&h=${encodeURIComponent(handle)}`
 
   const title = handle
-    ? `@${handle}'s SBTI Personality: ${typeCode} (${typeName})`
-    : `SBTI Personality: ${typeCode} (${typeName})`
+    ? `@${handle} is ${typeCode} (${typeName}) | SBTI x Twitter`
+    : `${typeCode} (${typeName}) | SBTI Personality Test`
 
   const description = handle
-    ? `AI analyzed @${handle}'s tweets and found their SBTI personality is ${typeCode} (${typeName}). What's yours? Let AI read your tweets to find out!`
-    : `SBTI AI Personality Test — 20 tweets is all it takes to see through your soul. 15 dimensions, 27 personality types.`
+    ? `AI read @${handle}'s tweets and exposed their soul: ${typeCode} — ${typeName}. 15 dimensions, 27 types. What's YOUR SBTI type?`
+    : `SBTI AI Personality Test — 20 tweets is all it takes to see through your soul. 15 dimensions, 27 types. Try it free.`
 
+  // Use summary card (not large_image) since our type images are small
+  // This gives a cleaner look with the square image on the left
   const html = `<!DOCTYPE html>
 <html>
 <head>
@@ -80,12 +82,10 @@ export async function onRequest(context) {
   <meta property="og:title" content="${escapeAttr(title)}" />
   <meta property="og:description" content="${escapeAttr(description)}" />
   <meta property="og:image" content="${escapeAttr(imageUrl)}" />
-  <meta property="og:image:width" content="400" />
-  <meta property="og:image:height" content="400" />
   <meta property="og:url" content="${escapeAttr(pageUrl)}" />
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="SBTI x Twitter" />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="SBTI x Twitter — AI Personality Test" />
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="${escapeAttr(title)}" />
   <meta name="twitter:description" content="${escapeAttr(description)}" />
   <meta name="twitter:image" content="${escapeAttr(imageUrl)}" />
