@@ -2323,7 +2323,7 @@
         finalType: best,
         kicker: t('yourType'),
         badge: t('matchTpl', { s: best.similarity, e: best.exact }),
-        sub: best.intro,
+        sub: getTypeIntro(best.code),
         similarity: best.similarity,
         exact: best.exact
       };
